@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>燕云输出模拟器</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <div class="brand-line">
+          <span class="brand-mark" aria-hidden="true">燕</span>
+          <h1>输出模拟器</h1>
+          <span class="version-tag">原型 v0.3</span>
+        </div>
+        <p>破竹·尘 · 60 秒木桩轴 · 线性期望模型</p>
+      </div>
+      <div class="header-actions">
+        <a href="./luzheng/">陆狰机制演练</a>
+        <button class="icon-button" id="exportButton" type="button" title="导出当前配置" aria-label="导出当前配置">
+          <span aria-hidden="true">⇩</span>
+        </button>
+        <button class="secondary-button" id="resetButton" type="button">恢复默认</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="panel input-panel" aria-labelledby="panel-heading">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">01 / 基础方案</span>
+            <h2 id="panel-heading">当前面板</h2>
+          </div>
+          <span class="autosave-status" id="autosaveStatus">已自动保存</span>
+        </div>
+
+        <div class="input-grid" id="panelInputs">
+          <label class="field">
+            <span>最小外功</span>
+            <input type="number" data-panel="minAttack" min="0" step="1" inputmode="decimal" />
+          </label>
+          <label class="field">
+            <span>最大外功</span>
+            <input type="number" data-panel="maxAttack" min="0" step="1" inputmode="decimal" />
+          </label>
+          <label class="field with-suffix">
+            <span>会心率</span>
+            <input type="number" data-panel="critRate" min="0" max="100" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+          <label class="field with-suffix">
+            <span>会意率</span>
+            <input type="number" data-panel="insightRate" min="0" max="100" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+          <label class="field with-suffix">
+            <span>直接会心率</span>
+            <input type="number" data-panel="directCritRate" min="0" max="100" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+          <label class="field with-suffix">
+            <span>直接会意率</span>
+            <input type="number" data-panel="directInsightRate" min="0" max="100" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+          <div class="field range-field field-wide">
+            <span>本属攻击（含无相）</span>
+            <div class="range-inputs">
+              <input type="number" data-panel="nativeElementMin" min="0" step="0.1" inputmode="decimal" aria-label="本属攻击下限" />
+              <i aria-hidden="true">至</i>
+              <input type="number" data-panel="nativeElementMax" min="0" step="0.1" inputmode="decimal" aria-label="本属攻击上限" />
+            </div>
+          </div>
+          <div class="field range-field field-wide">
+            <span>外属攻击</span>
+            <div class="range-inputs">
+              <input type="number" data-panel="foreignElementMin" min="0" step="0.1" inputmode="decimal" aria-label="外属攻击下限" />
+              <i aria-hidden="true">至</i>
+              <input type="number" data-panel="foreignElementMax" min="0" step="0.1" inputmode="decimal" aria-label="外属攻击上限" />
+            </div>
+          </div>
+          <label class="field">
+            <span>外功穿透</span>
+            <input type="number" data-panel="externalPenetration" min="0" step="0.01" inputmode="decimal" />
+          </label>
+          <label class="field">
+            <span>属攻穿透</span>
+            <input type="number" data-panel="elementalPenetration" min="0" step="0.01" inputmode="decimal" />
+          </label>
+          <label class="field with-suffix">
+            <span>伞武学增效</span>
+            <input type="number" data-panel="umbrellaBonus" min="0" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+          <label class="field with-suffix">
+            <span>全武学增效</span>
+            <input type="number" data-panel="allSkillBonus" min="0" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+          <label class="field with-suffix">
+            <span>对首领单位增伤</span>
+            <input type="number" data-panel="bossDamageBonus" min="0" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+          <label class="field with-suffix">
+            <span>其他通用增伤</span>
+            <input type="number" data-panel="damageBonus" min="0" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+          <label class="field with-suffix field-wide">
+            <span>精准率</span>
+            <input type="number" data-panel="precision" min="0" max="100" step="0.01" inputmode="decimal" />
+            <b>%</b>
+          </label>
+        </div>
+
+        <div class="subsection-heading">
+          <div>
+            <h3>一分钟木桩轴</h3>
+            <p>红硝香断即完美伞，焚巢捣穴即指响。</p>
+          </div>
+          <label class="compact-field">时长 <input type="number" id="durationInput" min="1" step="1" /> 秒</label>
+        </div>
+
+        <div class="rotation-table" id="rotationTable">
+          <div class="rotation-row rotation-head">
+            <span>技能</span><span>气竭外</span><span>气竭内</span><span>合计</span>
+          </div>
+          <div id="rotationRows"></div>
+        </div>
+
+        <div class="effect-row">
+          <label class="switch-field">
+            <input type="checkbox" id="lossSoulEnabled" />
+            <span aria-hidden="true"></span>
+            <strong>失魂落魄</strong>
+          </label>
+          <label class="compact-field">覆盖 <input type="number" id="lossSoulUptime" min="0" max="100" step="1" /> %</label>
+          <small>默认：增伤 5%，会心伤害 +27%</small>
+        </div>
+
+        <details class="model-settings">
+          <summary>模型参数</summary>
+          <div class="model-grid">
+            <label class="field with-suffix"><span>气竭倍率</span><input type="number" data-model="staggerMultiplier" min="0" step="0.01" /><b>×</b></label>
+            <label class="field with-suffix"><span>会心倍率</span><input type="number" data-model="critMultiplier" min="0" step="0.01" /><b>×</b></label>
+            <label class="field with-suffix"><span>会意倍率</span><input type="number" data-model="insightMultiplier" min="0" step="0.01" /><b>×</b></label>
+            <label class="field with-suffix"><span>实测校准</span><input type="number" data-model="calibration" min="0" step="0.01" /><b>×</b></label>
+          </div>
+        </details>
+
+        <details class="skill-settings">
+          <summary>技能系数</summary>
+          <p>外功倍率、外功固伤、破竹倍率、破竹固伤、独立单次伤害。玲珑泡影可先填实测单次伤害。</p>
+          <div class="skill-coefficient-list" id="skillCoefficientList"></div>
+        </details>
+      </section>
+
+      <section class="results" aria-labelledby="result-heading">
+        <div class="result-hero">
+          <div class="section-heading result-heading">
+            <div>
+              <span class="eyebrow">02 / 模拟结果</span>
+              <h2 id="result-heading">调整后 DPS</h2>
+            </div>
+            <span class="estimate-tag">估算</span>
+          </div>
+          <div class="dps-value" id="adjustedDps">0</div>
+          <div class="gain-line">
+            <span id="gainPercent">+0.00%</span>
+            <span id="gainDps">+0 DPS</span>
+            <span>相较当前面板</span>
+          </div>
+          <div class="comparison-strip">
+            <div><span>当前面板</span><strong id="baselineDps">0</strong></div>
+            <div><span>调整后</span><strong id="comparisonDps">0</strong></div>
+            <div><span>一分钟总伤</span><strong id="totalDamage">0</strong></div>
+          </div>
+        </div>
+
+        <div class="breakdown-section">
+          <div class="subsection-heading compact">
+            <div><h3>伤害构成</h3><p>按调整后方案计算</p></div>
+          </div>
+          <div class="breakdown-list">
+            <div id="skillBreakdownList"></div>
+            <div class="split-stats">
+              <div><span>气竭外伤害</span><strong id="normalDamage">0</strong></div>
+              <div><span>气竭内伤害</span><strong id="staggerDamage">0</strong></div>
+            </div>
+            <div class="channel-stats">
+              <div><span>外功伤害</span><strong id="externalDamage">0</strong></div>
+              <div><span>本属伤害</span><strong id="nativeElementDamage">0</strong></div>
+              <div><span>外属伤害</span><strong id="foreignElementDamage">0</strong></div>
+              <div><span>独立伤害</span><strong id="directDamage">0</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="probability-section">
+          <div class="subsection-heading compact"><div><h3>期望落点</h3><p>精准、会心、会意的四结果分配</p></div></div>
+          <div class="probability-grid">
+            <div><span>擦伤</span><strong id="grazeProbability">0%</strong></div>
+            <div><span>普通</span><strong id="normalProbability">0%</strong></div>
+            <div><span>会心</span><strong id="critProbability">0%</strong></div>
+            <div><span>会意</span><strong id="insightProbability">0%</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel affix-panel" aria-labelledby="affix-heading">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">03 / 词条试算</span>
+            <h2 id="affix-heading">调律增减</h2>
+          </div>
+          <button class="icon-button add-button" id="addAffixButton" type="button" title="添加词条" aria-label="添加词条">＋</button>
+        </div>
+        <p class="section-note">增减只作用于“调整后”方案，不会改动左侧当前面板。</p>
+
+        <div class="affix-list" id="affixList"></div>
+        <div class="empty-state" id="affixEmpty" hidden>
+          <strong>尚未添加词条</strong>
+          <span>点击右上角加号开始比较。</span>
+        </div>
+
+        <div class="panel-delta" id="panelDelta"></div>
+
+        <details class="season-settings">
+          <summary>
+            <span>赛季词条模板</span>
+            <small id="seasonNameSummary">杭州西 · 110阶</small>
+          </summary>
+          <label class="field season-name-field"><span>模板名称</span><input type="text" id="seasonNameInput" /></label>
+          <p>添加新词条时自动带入下列单条承音值。最大外功已按 114.1 预置，其他项请按实际数据校正。</p>
+          <div class="season-value-list" id="seasonValueList"></div>
+        </details>
+
+        <div class="formula-note">
+          <strong>当前是比较模型</strong>
+          <p>已计外功/属攻穿透与面板增效，但未完整复刻防御、抗性、全部心法与团队增益。用“实测校准”对齐真实木桩后，更适合比较词条收益。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>110阶技能系数 · 数据基线 2026-08-28</span>
+      <span>所有配置保存在当前浏览器</span>
+    </footer>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

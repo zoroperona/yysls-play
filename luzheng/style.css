@@ -1,0 +1,410 @@
+:root {
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #e8dec9;
+  background: #191e1c;
+  font-size: 14px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+}
+h1,
+h2,
+p {
+  margin: 0;
+}
+h1,
+h2 {
+  font-family: "Songti SC", serif;
+  font-weight: 500;
+}
+h1 {
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+h1 small {
+  display: block;
+  font: 12px sans-serif;
+  color: #b7b69f;
+  margin-top: 6px;
+}
+.stage {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  background: radial-gradient(ellipse at center, #324237, #171e1a);
+}
+#arena {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  outline: none;
+}
+.hud {
+  position: absolute;
+}
+.stage.player-dead {
+  filter: grayscale(1);
+}
+#deathNotice {
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  padding: 24px 36px;
+  background: #101511dd;
+  border: 1px solid #b7b69f;
+}
+#deathNotice h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+#deathNotice p {
+  font-size: 14px;
+}
+.topline {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(34vw, 440px);
+  text-align: center;
+  pointer-events: none;
+}
+.boss-hp span {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+}
+progress {
+  width: 100%;
+  height: 7px;
+  accent-color: #bd7552;
+}
+#clock {
+  display: block;
+  margin-top: 5px;
+  color: #d6bb7e;
+  font: 12px monospace;
+}
+button,
+select,
+input {
+  font: inherit;
+  color: inherit;
+  background: #29372eee;
+  border: 1px solid #626751;
+  border-radius: 2px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+button:hover {
+  background: #424c3f;
+}
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid #ddc17b;
+  outline-offset: 3px;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.entry {
+  right: 24px;
+  top: 24px;
+  width: 240px;
+}
+#showLog {
+  float: right;
+  clear: right;
+  margin-top: 8px;
+}
+#logMenu {
+  width: min(800px, calc(100vw - 32px));
+}
+#fullLog {
+  max-height: 55dvh;
+  overflow: auto;
+  white-space: pre-wrap;
+  font: 12px/1.8 monospace;
+}
+#setup {
+  padding: 48px;
+}
+#entryMenu {
+  width: min(560px, calc(100vw - 32px));
+  text-align: center;
+}
+.entry-eyebrow {
+  color: #b7b69f;
+  font-size: 13px;
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+#entryTitle {
+  font-size: 38px;
+  margin-bottom: 32px;
+}
+#start {
+  display: block;
+  width: 100%;
+  margin-top: 32px;
+  padding: 14px;
+  color: #f0dfb7;
+  border-color: #a5956a;
+  font-size: 18px;
+}
+#setup label {
+  display: block;
+  margin-bottom: 8px;
+}
+select {
+  width: 100%;
+}
+#assignment {
+  color: #c3c9b4;
+  font-size: 12px;
+  line-height: 1.8;
+  margin-top: 12px;
+}
+#pause {
+  float: right;
+  min-width: 120px;
+}
+.notice {
+  top: 136px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(50vw, 620px);
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 2px 5px #000;
+}
+.notice h2 {
+  color: #ead69d;
+  font-size: 25px;
+  margin-bottom: 5px;
+}
+.notice p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #c3c9b4;
+}
+.raid {
+  bottom: 24px;
+  left: 24px;
+  width: 280px;
+  pointer-events: none;
+}
+.raid-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+#party {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.team-column {
+  display: grid;
+  gap: 4px;
+}
+.team-heading {
+  font-size: 11px;
+  color: #d5c49a;
+  margin-bottom: 2px;
+}
+.member {
+  background: #224f78ed;
+  color: #eaf3ff;
+  border: 1px solid #3c739c;
+  padding: 6px 8px;
+  font-size: 12px;
+  min-width: 0;
+}
+.member.you {
+  outline: 1px solid #f3d995;
+  outline-offset: 1px;
+}
+.member span {
+  display: flex;
+  justify-content: space-between;
+  gap: 3px;
+}
+.member b {
+  font-size: 10px;
+  font-weight: normal;
+}
+.member progress {
+  display: block;
+  height: 4px;
+  margin-top: 5px;
+  accent-color: #70b9ee;
+}
+.member.healer {
+  background: #286245ed;
+  border-color: #468560;
+}
+.member.healer progress {
+  accent-color: #8be0a6;
+}
+.member.dead {
+  opacity: 0.55;
+}
+#rescue {
+  font-size: 11px;
+  margin-top: 8px;
+  color: #c3c9b4;
+}
+.keys {
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  white-space: nowrap;
+  color: #afb6a8;
+  font-size: 11px;
+  pointer-events: none;
+}
+kbd {
+  color: #e4d8b5;
+}
+dialog {
+  border: 1px solid #a5956a;
+  padding: 0;
+  color: #e8dec9;
+  background: #202a24;
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+}
+dialog::backdrop {
+  background: #101511aa;
+  backdrop-filter: blur(3px);
+}
+.menu-panel {
+  padding: 30px;
+}
+.menu-panel h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.menu-panel p {
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.menu-actions {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0 12px;
+}
+.muted,
+details {
+  font-size: 12px;
+  color: #b3bca9;
+}
+details {
+  margin-top: 24px;
+  line-height: 1.8;
+}
+summary {
+  cursor: pointer;
+  color: #dcc993;
+}
+details label {
+  display: block;
+  margin: 12px 0 5px;
+}
+input {
+  width: 100%;
+}
+#log {
+  list-style: none;
+  padding: 0;
+  max-height: 140px;
+  overflow: auto;
+}
+#log time {
+  color: #ae9864;
+  margin-right: 8px;
+}
+.touch {
+  display: none;
+  right: 16px;
+  bottom: 16px;
+  gap: 5px;
+}
+.touch button {
+  touch-action: none;
+}
+[hidden] {
+  display: none !important;
+}
+@media (max-width: 1100px) {
+  .keys {
+    left: auto;
+    right: 20px;
+    transform: none;
+    gap: 9px;
+  }
+  .entry {
+    width: 200px;
+  }
+  .raid {
+    width: 248px;
+  }
+}
+@media (max-width: 600px) {
+  .entry {
+    right: 12px;
+    top: 12px;
+    width: 164px;
+  }
+  #setup {
+    padding: 28px 24px;
+  }
+  h1 {
+    font-size: 22px;
+  }
+  .topline {
+    left: 16px;
+    transform: none;
+    width: 38vw;
+  }
+  .notice {
+    top: 126px;
+    left: 12px;
+    transform: none;
+    width: 46vw;
+  }
+  .notice h2 {
+    font-size: 20px;
+  }
+  .raid {
+    left: 12px;
+    bottom: 68px;
+    width: 230px;
+  }
+  .keys {
+    display: none;
+  }
+}
+@media (pointer: coarse) {
+  .touch {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 300px;
+  }
+  .keys {
+    display: none;
+  }
+}

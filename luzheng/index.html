@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>陆狰 · 机制演练</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- 全窗口战场，HUD 覆盖其上；玩家替换所选队伍指定位置。沿用现有素材与机制配色。 -->
+    <main class="stage">
+      <canvas
+        id="arena"
+        aria-label="陆狰战场，WASD 移动，1 输出，E 卸势，Shift 闪避"
+        tabindex="0"
+      ></canvas>
+      <div id="deathNotice" class="hud" role="status" hidden>
+        <h2>你已倒地</h2><p id="reviveStatus"></p>
+      </div>
+      <div class="topline hud">
+        <div class="boss-hp">
+          <span>陆狰 <b id="bossValue">100%</b></span
+          ><progress id="bossHp" max="100" value="100"></progress>
+        </div>
+        <span id="clock">00:00</span>
+      </div>
+      <div class="entry hud">
+        <button id="pause" hidden>暂停 · Esc</button
+        ><button id="showLog">战斗日志</button>
+      </div>
+      <dialog id="entryMenu" aria-labelledby="entryTitle">
+        <div id="setup">
+          <p class="entry-eyebrow">陆狰 · 十人机制演练</p>
+          <h1 id="entryTitle">准备入场</h1>
+          <label for="team">选择队伍</label
+          ><select id="team">
+            <option value="1">1 队 · 左半场</option>
+            <option value="2">2 队 · 右半场</option>
+          </select>
+          <p id="assignment"></p>
+          <button id="start">开始游戏</button>
+        </div>
+      </dialog>
+      <div class="notice hud">
+        <h2 id="skill"></h2>
+        <p id="hint"></p>
+      </div>
+      <section class="raid hud" aria-label="团队框架">
+        <div class="raid-title">团队 <span id="alive"></span></div>
+        <div id="party"></div>
+        <p id="rescue"></p>
+      </section>
+      <div class="keys hud">
+        <span><kbd>W A S D</kbd> 移动</span><span><kbd>1</kbd> 输出</span
+        ><span><kbd>E</kbd> 卸势</span><span><kbd>Shift</kbd> 闪避</span
+        ><span><kbd>空格</kbd> 按住空档 3×</span
+        ><span><kbd>← →</kbd> 切机制</span>
+        <span><kbd>Esc</kbd> 暂停</span>
+      </div>
+      <div class="touch hud">
+        <button data-move="0,-1">↑</button><button data-move="-1,0">←</button
+        ><button data-move="0,1">↓</button><button data-move="1,0">→</button
+        ><button data-action="1">输出</button
+        ><button data-action="e">卸势</button
+        ><button data-action="shift">闪避</button>
+      </div>
+      <dialog id="pauseMenu" aria-labelledby="pauseTitle">
+        <div class="menu-panel">
+          <h2 id="pauseTitle">演练暂停</h2>
+          <button id="pauseLog">战斗日志</button>
+          <p class="muted">战场已冻结 · Esc 返回</p>
+          <div class="menu-actions">
+            <button id="resume">继续游戏</button
+            ><button id="reset">重开 / 重新选队</button>
+          </div>
+          <details>
+            <summary>练习设置与战斗记录</summary>
+            <label for="chapter">练习章节</label
+            ><select id="chapter">
+              <option value="all">完整观测轴</option></select
+            ><label for="dps">输出 AI 的 DPS（重开生效）</label
+            ><input id="dps" type="number" min="0" max="1000" value="70" />
+            <p>
+              空档默认 2 倍速，按住空格 3 倍速；机制执行与操作始终 1
+              倍速。点击敌人切换目标。
+            </p>
+            <p id="score"></p>
+            <ol id="log"></ol>
+          </details>
+        </div>
+      </dialog>
+      <dialog id="result" aria-labelledby="resultTitle">
+        <div class="menu-panel">
+          <h2 id="resultTitle"></h2>
+          <button id="resultLog">战斗日志</button>
+          <p id="resultReason"></p>
+          <div class="menu-actions">
+            <button id="retry">重新挑战</button
+            ><button id="dismiss">查看战场</button>
+          </div>
+        </div>
+      </dialog>
+      <dialog id="logMenu" aria-labelledby="logTitle">
+        <div class="menu-panel">
+          <h2 id="logTitle">战斗日志</h2>
+          <p>保留本页历次练习，刷新后清空。查看时暂停。</p>
+          <button id="exportLog">导出日志</button
+          ><button id="closeLog">关闭</button>
+          <pre id="fullLog"></pre>
+        </div>
+      </dialog>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
