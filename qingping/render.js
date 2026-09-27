@@ -1,5 +1,5 @@
-import { renderP2 } from "./p2-render.js?v=a53cc621f12e";
-import { distance } from "./engine.js?v=a53cc621f12e";
+import { renderP2 } from "./p2-render.js?v=76245c7662c7";
+import { distance } from "./engine.js?v=76245c7662c7";
 function loadImage(path) {
   const img = new Image(),
     url = new URL(path, import.meta.url);

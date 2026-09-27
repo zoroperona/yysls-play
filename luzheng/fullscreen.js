@@ -1,1 +1,1 @@
-export { bindFullscreen } from "../shared/fullscreen.js?v=a53cc621f12e";
+export { bindFullscreen } from "../shared/fullscreen.js?v=76245c7662c7";

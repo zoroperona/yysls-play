@@ -1,1 +1,1 @@
-export { bindTouchControls } from "../shared/touch-controls.js?v=a53cc621f12e";
+export { bindTouchControls } from "../shared/touch-controls.js?v=76245c7662c7";

@@ -1,9 +1,9 @@
-import { p2Hint, castState } from "./p2.js?v=a53cc621f12e";
-import { Game, distance } from "./engine.js?v=a53cc621f12e";
-import { TIMELINE } from "./timeline.js?v=a53cc621f12e";
-import { render } from "./render.js?v=a53cc621f12e";
-import { bindTouchControls } from "../shared/touch-controls.js?v=a53cc621f12e";
-import { bindFullscreen } from "../shared/fullscreen.js?v=a53cc621f12e";
+import { p2Hint, castState } from "./p2.js?v=76245c7662c7";
+import { Game, distance } from "./engine.js?v=76245c7662c7";
+import { TIMELINE } from "./timeline.js?v=76245c7662c7";
+import { render } from "./render.js?v=76245c7662c7";
+import { bindTouchControls } from "../shared/touch-controls.js?v=76245c7662c7";
+import { bindFullscreen } from "../shared/fullscreen.js?v=76245c7662c7";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");

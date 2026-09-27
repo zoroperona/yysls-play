@@ -1,7 +1,7 @@
-import { bindFullscreen } from "./fullscreen.js?v=a53cc621f12e";
-import { bindTouchControls } from "./touch-controls.js?v=a53cc621f12e";
-import { Game, dist } from "./engine.js?v=a53cc621f12e";
-import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=a53cc621f12e";
+import { bindFullscreen } from "./fullscreen.js?v=76245c7662c7";
+import { bindTouchControls } from "./touch-controls.js?v=76245c7662c7";
+import { Game, dist } from "./engine.js?v=76245c7662c7";
+import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=76245c7662c7";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");

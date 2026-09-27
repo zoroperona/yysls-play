@@ -1,5 +1,5 @@
 // P2 training parameters and decisions are documented in docs/qingping-p2-design.md.
-import { distance, inFireCone } from "./engine.js?v=a53cc621f12e";
+import { distance, inFireCone } from "./engine.js?v=76245c7662c7";
 export const P2_TYPES = new Set([
   "green",
   "cleave",
@@ -122,8 +122,28 @@ export function beginP2(g) {
       .filter((p) => !p.special)
       .map((p) => cone(g.boss, direction(g.boss, p), c.arenaRadius * 2, 15));
   if (a.type === "heart") {
-    a.targets = g.choose(2, excluded);
+    const tangshi = g.party.find((p) => p.name === "棠尸");
+    a.targets = g.choose(2, [...excluded, tangshi.id]);
+    const substitute = a.targets.includes(0)
+      ? g.choose(
+          1,
+          g.party
+            .filter(
+              (p) =>
+                p.special ||
+                p.healer ||
+                p.id === 0 ||
+                p.id === tangshi.id ||
+                a.targets.includes(p.id),
+            )
+            .map((p) => p.id),
+        )[0]
+      : 0;
+    a.rescuers = [tangshi.id, substitute].filter((id) => id != null);
     g.demons = [];
+    g.log(
+      `心魔救援：${a.rescuers.map((id) => g.party[id].name).join("、")} · 到1号点吃倾白小圈`,
+    );
     g.log(
       "心魔点名：" +
         a.targets.map((id) => g.party[id].name).join("、") +
@@ -149,6 +169,7 @@ export function smallCircle(g, p) {
         q.special ||
         q.corrupted ||
         q.layers !== 2 ||
+        (g.a?.type === "heart" && !g.a.rescuers.includes(q.id)) ||
         distance(q, zone) > zone.radius,
     )
     .map((q) => q.id);
@@ -297,12 +318,21 @@ export function p2AITarget(g, p, target) {
     if (p.special && !p.qingbai) return target;
     const rescued = g.demons.length === 2 && g.demons.every((d) => d.saved);
     if (rescued && e < 27) return target;
+    if (!rescued && p.id !== 0 && a.rescuers.includes(p.id) && p.layers === 3) {
+      const helpers = a.rescuers.filter((id) => id !== 0);
+      const offset = (helpers.indexOf(p.id) - (helpers.length - 1) / 2) * 3;
+      return { x: point.x + offset, y: point.y + 4 };
+    }
     if (p.qingbai && e < 24) return { x: point.x, y: point.y - 3 };
-    if (e < 27 || p.corrupted || (!rescued && p.layers === 3))
+    const demon = g.demons.find((d) => d.id === p.id);
+    const needsGather =
+      (a.targets.includes(p.id) && !demon?.saved) || a.rescuers.includes(p.id);
+    if ((e < 27 && needsGather) || p.corrupted || (!rescued && p.layers === 3))
       return {
         x: point.x + Math.cos(p.homeAngle) * 0.8,
         y: point.y + Math.sin(p.homeAngle) * 0.8,
       };
+    if (e < 27) return target;
     return {
       x: g.boss.x + Math.cos(p.homeAngle) * 2,
       y: g.boss.y + Math.sin(p.homeAngle) * 2,
@@ -511,9 +541,10 @@ export function updateP2(g, dt) {
       once(`betray${i}`, 9 + i * 2, () => {
         for (const d of g.demons.filter((d) => !d.saved)) {
           const p = g.party[d.id];
-          const victim = g.party
-            .filter((q) => q.hp && !q.corrupted && distance(p, q) <= 12)
-            .sort((x, y) => distance(p, x) - distance(p, y))[0];
+          const candidates = g.party.filter(
+            (q) => q.hp && !q.corrupted && distance(p, q) <= 12,
+          );
+          const victim = candidates[Math.floor(g.random() * candidates.length)];
           if (victim) {
             g.effects.push({
               kind: "heartAttack",
@@ -624,7 +655,7 @@ export function p2Hint(g) {
       : e < 27
         ? g.demons.length === 2 && g.demons.every((d) => d.saved)
           ? "心魔已救出 · 回Boss输出，准备后续开盾"
-          : "前往1号点吃小圈 · 三重按住输出救心魔"
+          : "你与棠尸到1号点吃小圈 · 三重输出救两只心魔，漏救即失败"
         : "先到Boss脚下集合 · 二重时按G/点特殊键，再卸式三次";
     timer = `${e < 7 ? "叛变" : "心魔截止"} ${Math.max(0, (e < 7 ? 7 : 32) - e).toFixed(1)} 秒 · 已救 ${g.demons.filter((d) => d.saved).length}/2`;
   }
