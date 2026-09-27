@@ -1,4 +1,5 @@
-import { CONFIG } from "./config.js?v=8f3c53ef6811";
+import { createRoster } from "../shared/roster.js?v=a53cc621f12e";
+import { CONFIG } from "./config.js?v=a53cc621f12e";
 import {
   segmentDistance,
   hitsSword,
@@ -8,8 +9,8 @@ import {
   inCleaveOuter,
   swordImpact,
   blocksBeforeSword,
-} from "./geometry.js?v=8f3c53ef6811";
-import { TIMELINE } from "./timeline.js?v=8f3c53ef6811";
+} from "./geometry.js?v=a53cc621f12e";
+import { TIMELINE } from "./timeline.js?v=a53cc621f12e";
 export const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 export class Game {
   constructor(settings = {}, practice = null) {
@@ -17,37 +18,7 @@ export class Game {
     this.practice = practice;
     this.t = practice ? Math.max(0, practice.at - 4) : 0;
     this.playerTeam = settings.playerTeam === 2 ? 2 : 1;
-    this.party = Array.from({ length: 10 }, (_, i) => {
-      const team =
-          this.playerTeam === 1 ? (i < 5 ? 1 : 2) : i === 0 || i > 5 ? 2 : 1,
-        healer =
-          this.playerTeam === 1 ? i === 4 || i === 9 : i === 5 || i === 9;
-      return {
-        id: i,
-        team,
-        x: (team === 1 ? -1 : 1) * (70 + (i % 5) * 25),
-        y: 100 + Math.floor(i / 5) * 40,
-        hp: 100,
-        healer,
-        self: healer ? this.c.selfRevives : 0,
-        deadAt: null,
-        parry: -999,
-      };
-    });
-    const names = [
-      ["招租位", "招租位", "棠尸", "倾白", "招租位"],
-      ["招租位", "衫上", "一夜飘零", "桓云宴", "招租位"],
-    ];
-    for (const team of [1, 2]) {
-      const members = this.party.filter((p) => p.team === team);
-      members.forEach((p, slot) => {
-        p.slot = slot;
-        p.name = p.id === 0 ? "玩家" : names[team - 1][slot];
-        // 玩家在所选队伍第 1 格，两队第 5 格固定治疗。
-        p.healer = slot === 4;
-        p.self = p.healer ? this.c.selfRevives : 0;
-      });
-    }
+    this.party = createRoster(this.playerTeam, this.c.selfRevives);
     this.guards = this.party
       .filter((p) => p.team === 1)
       .slice(0, 4)
@@ -1011,7 +982,7 @@ export class Game {
       (e) => this.real - e.at < e.duration,
     );
     const next = this.queue.find((e) => !e.started);
-    const idleSpeed = input.fastForward ? 3 : this.c.idleSpeed;
+    const idleSpeed = this.c.idleSpeed;
     this.t += this.a
       ? dt
       : Math.min(

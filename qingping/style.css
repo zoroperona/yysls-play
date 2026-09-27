@@ -1,0 +1,996 @@
+:root {
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #e7e4d4;
+  background: #15201e;
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+}
+button,
+select {
+  font: inherit;
+  color: inherit;
+  background: #243c36;
+  border: 1px solid #758b73;
+  border-radius: 3px;
+  padding: 10px 14px;
+  cursor: pointer;
+  min-height: 44px;
+}
+button:hover {
+  background: #365046;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid #e2c989;
+  outline-offset: 2px;
+}
+button,
+canvas,
+#joystickZone {
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+a {
+  color: #c3d5ba;
+}
+p {
+  line-height: 1.7;
+  margin: 8px 0;
+}
+h1,
+h2 {
+  font-family: "Songti SC", serif;
+  font-weight: 500;
+  margin: 10px 0;
+}
+h1 {
+  font-size: 40px;
+}
+h2 {
+  font-size: 24px;
+}
+.stage {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  -webkit-user-select: none;
+  user-select: none;
+  background: radial-gradient(ellipse at 50% 55%, #30443b, #101a19);
+}
+#arena {
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+}
+.overlay {
+  position: absolute;
+  pointer-events: none;
+}
+.boss-panel {
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(35vw, 420px);
+  text-align: center;
+}
+.boss-panel > div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+}
+progress {
+  width: 100%;
+  height: 6px;
+  accent-color: #b19461;
+}
+#clock {
+  font: 12px monospace;
+  color: #d6c8a1;
+}
+.toolbar {
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+.notice {
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: min(54vw, 700px);
+  text-shadow: 0 2px 4px #000;
+}
+.notice h2 {
+  color: #edce92;
+}
+.notice p {
+  margin: 3px 0;
+}
+#countdown {
+  color: #e7bc82;
+  font-variant-numeric: tabular-nums;
+  min-height: 22px;
+}
+.raid {
+  left: 24px;
+  bottom: 52px;
+  width: 280px;
+  background: #101c19c9;
+  padding: 10px;
+  border-top: 1px solid #71816b;
+  font-size: 12px;
+}
+#party {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 7px;
+  margin-top: 7px;
+}
+.member {
+  padding: 3px 5px;
+  border-left: 2px solid #7caabd;
+  background: #28403999;
+  min-height: 30px;
+}
+.member.player {
+  border-color: #f1cd79;
+}
+.member.healer {
+  border-color: #8bd191;
+}
+.member.dead {
+  opacity: 0.35;
+}
+.member span {
+  display: flex;
+  justify-content: space-between;
+}
+.member small {
+  color: #bfcbbd;
+  font-size: 10px;
+}
+.member progress {
+  display: block;
+  height: 4px;
+  accent-color: #80a8b4;
+  margin-top: 3px;
+}
+.member.healer progress {
+  accent-color: #86b88a;
+}
+#rescue {
+  margin: 4px 0 0;
+  color: #bbcab7;
+}
+.layers {
+  left: 50%;
+  bottom: 70px;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #dce3c8;
+}
+#layerText {
+  font-size: 18px;
+}
+#slots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin: 8px;
+}
+#slots i {
+  width: 25px;
+  height: 9px;
+  border: 1px solid #9fac87;
+  background: #172822;
+}
+#slots i.on {
+  background: #baca8e;
+  box-shadow: 0 0 12px #baca8e44;
+}
+.layers small {
+  color: #b6c4ad;
+}
+.keys {
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 12px;
+  color: #acb7a6;
+}
+#death {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background: #17221beb;
+  border: 1px solid #aab39a;
+}
+dialog {
+  background: #192d28;
+  color: #e7e4d4;
+  border: 1px solid #7c8d75;
+  border-radius: 4px;
+  padding: 28px;
+  width: min(500px, calc(100vw - 32px));
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  text-align: center;
+  box-shadow: 0 20px 90px #0008;
+}
+dialog::backdrop {
+  background: #0c1412c9;
+}
+dialog p {
+  margin: 15px 0;
+}
+dialog button {
+  margin: 5px;
+}
+dialog label {
+  display: block;
+  margin: 20px 0;
+}
+dialog a {
+  display: block;
+  margin-top: 16px;
+}
+.primary {
+  background: #647656;
+  color: #fff7da;
+  width: calc(100% - 10px);
+}
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #b6c5aa;
+}
+.muted {
+  color: #98ac9b;
+  font-size: 12px;
+}
+.instructions {
+  font-size: 14px;
+}
+details {
+  margin-top: 20px;
+  text-align: left;
+}
+details select {
+  max-width: 100%;
+  margin-top: 10px;
+}
+#logMenu {
+  width: min(760px, calc(100vw - 32px));
+}
+#fullLog {
+  text-align: left;
+  white-space: pre-wrap;
+  max-height: 50dvh;
+  overflow: auto;
+  font: 12px/1.8 monospace;
+}
+.touch-only {
+  display: none;
+}
+[hidden] {
+  display: none !important;
+}
+@media (max-width: 1100px) {
+  .raid {
+    width: 248px;
+  }
+  .toolbar {
+    right: 12px;
+  }
+}
+@media (max-width: 760px) {
+  .raid {
+    width: 184px;
+    left: 12px;
+    font-size: 10px;
+  }
+  .member {
+    padding: 3px;
+  }
+  .keys {
+    font-size: 10px;
+  }
+  .notice {
+    width: 55vw;
+  }
+  .toolbar button {
+    padding: 8px;
+  }
+}
+@media (any-pointer: coarse) {
+  .touch-only {
+    display: block;
+  }
+  .keys {
+    display: none;
+  }
+  .raid {
+    top: max(10px, env(safe-area-inset-top));
+    bottom: auto;
+    left: max(10px, env(safe-area-inset-left));
+    width: 156px;
+    padding: 5px;
+    font-size: 10px;
+  }
+  .member {
+    min-height: 24px;
+    padding: 2px 3px;
+  }
+  .member small {
+    font-size: 8px;
+  }
+  #party {
+    gap: 2px 4px;
+    margin-top: 3px;
+  }
+  .boss-panel {
+    top: 10px;
+    width: 34vw;
+  }
+  .boss-panel > div {
+    font-size: 14px;
+  }
+  #clock {
+    margin: 4px 0;
+  }
+  .notice {
+    top: 60px;
+    width: 44vw;
+  }
+  .notice h2 {
+    font-size: 19px;
+  }
+  .notice p {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .toolbar {
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+    gap: 3px;
+  }
+  .toolbar button {
+    padding: 6px;
+    font-size: 11px;
+    min-height: 36px;
+  }
+  .toolbar .touch-only {
+    grid-column: span 2;
+  }
+  .layers {
+    bottom: 18px;
+  }
+  #layerText {
+    font-size: 14px;
+  }
+  #slots {
+    margin: 4px;
+  }
+  .layers small {
+    font-size: 10px;
+  }
+  #joystickZone {
+    position: absolute;
+    left: 0;
+    top: 44%;
+    width: 45%;
+    bottom: 0;
+  }
+  #joystick {
+    display: none;
+    position: absolute;
+    width: 104px;
+    height: 104px;
+    border: 1px solid #bbc9a977;
+    border-radius: 50%;
+    background: #90aa8820;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  #joystick.active {
+    display: block;
+  }
+  #joystickKnob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #c5d3b4;
+    background: #abc99b55;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .touch-actions {
+    position: absolute;
+    bottom: max(15px, env(safe-area-inset-bottom));
+    right: max(14px, env(safe-area-inset-right));
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .touch-actions button {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    padding: 0;
+    background: #253c32e8;
+  }
+  .touch-actions button[data-action="e"] {
+    width: 65px;
+    height: 65px;
+    border-color: #d4b57d;
+  }
+  .touch-actions small {
+    display: block;
+    font-size: 9px;
+  }
+  .touch-actions button.active {
+    background: #67764b;
+  }
+  dialog {
+    padding: 20px;
+  }
+  dialog h1 {
+    font-size: 28px;
+  }
+  dialog p {
+    margin: 8px 0;
+  }
+  dialog label {
+    margin: 10px 0;
+  }
+}
+@media (any-pointer: coarse) and (max-height: 360px) {
+  .raid {
+    width: 144px;
+  }
+  .member {
+    min-height: 21px;
+  }
+  .notice {
+    top: 53px;
+  }
+  .notice h2 {
+    font-size: 17px;
+  }
+  .layers {
+    bottom: 10px;
+  }
+  .touch-actions {
+    gap: 5px;
+  }
+  .touch-actions button {
+    width: 46px;
+    height: 46px;
+  }
+  .touch-actions button[data-action="e"] {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+.party-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 5px;
+  color: #b6c8a6;
+  font-size: 11px;
+}
+.member span {
+  white-space: nowrap;
+}
+.member small {
+  flex-shrink: 0;
+}
+
+.stage.player-dead {
+  filter: grayscale(1);
+}
+#death {
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  width: max-content;
+  max-width: calc(100% - 32px);
+}
+#death h2 {
+  margin: 0 0 10px;
+  font-size: 30px;
+}
+#death p {
+  margin: 0;
+  font-size: 14px;
+}
+#cast {
+  width: min(320px, 100%);
+  margin: 8px auto 0;
+}
+#castLabel {
+  font-size: 12px;
+  color: #e5ce93;
+  margin-bottom: 4px;
+}
+#castProgress {
+  display: block;
+  width: 100%;
+  height: 10px;
+  appearance: none;
+  border: 1px solid #a69261;
+  background: #15201e;
+}
+#castProgress::-webkit-progress-bar {
+  background: #15201e;
+}
+#castProgress::-webkit-progress-value {
+  background: #d7b868;
+}
+#castProgress::-moz-progress-bar {
+  background: #d7b868;
+}
+.channeling #castLabel {
+  color: #b7dece;
+}
+.channeling #castProgress::-webkit-progress-value {
+  background: #83bdab;
+}
+.channeling #castProgress::-moz-progress-bar {
+  background: #83bdab;
+}
+@media (max-width: 600px) {
+  #death h2 {
+    font-size: 22px;
+  }
+  #death {
+    padding: 12px 18px;
+  }
+}
+
+#shieldAction {
+  display: block;
+  margin: 8px auto 0;
+  pointer-events: auto;
+  min-height: 38px;
+}
+
+@media (any-pointer: coarse) {
+  #specialAction {
+    position: absolute;
+    right: 0;
+    bottom: 76px;
+    border-color: #a5d3bc;
+  }
+}
+
+.boss-panel .boss-health-track {
+  position: relative;
+  display: block;
+  height: 13px;
+  margin: 6px 0 13px;
+}
+#bossHp {
+  display: block;
+  height: 100%;
+  appearance: none;
+  background: #3b2525;
+  border: 1px solid #ad6757;
+}
+#bossHp::-webkit-progress-bar {
+  background: #3b2525;
+}
+#bossHp::-webkit-progress-value {
+  background: linear-gradient(#df9476, #a94d41);
+}
+#bossHp::-moz-progress-bar {
+  background: #c66b56;
+}
+#shieldBar {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #e8d494;
+  box-shadow: 0 0 7px #dbc77b66;
+}
+#shieldFill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    135deg,
+    #e8d89a 0 5px,
+    #a89150 5px 8px,
+    #eadcac 8px 10px
+  );
+}
+#shieldValue {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  transform: translateX(-50%);
+  padding: 1px 9px;
+  color: #fff0b4;
+  background: #746035;
+  border: 1px solid #eadcac;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+#shieldNotice {
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  text-align: center;
+  color: #fff0ac;
+  background: #15221cee;
+  border: 1px solid #d6bb7e;
+  pointer-events: none;
+  z-index: 6;
+}
+#shieldNotice strong {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+#shieldNoticeText {
+  font-size: 15px;
+  line-height: 1.5;
+}
+@media (any-pointer: coarse) {
+  #shieldNotice {
+    top: 58%;
+    padding: 8px 14px;
+  }
+  #shieldNotice strong {
+    font-size: 17px;
+    margin-bottom: 3px;
+  }
+  #shieldNoticeText {
+    font-size: 12px;
+  }
+}
+
+#victoryBanner {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, #0d130e80 0%, transparent 65%);
+}
+#victoryBanner img {
+  width: min(850px, 92vw);
+  height: auto;
+  filter: drop-shadow(0 3px 14px #fff4bc55) drop-shadow(0 6px 6px #0008);
+}
+#victoryText {
+  font-family: "Kaiti SC", "STKaiti", "Songti SC", serif;
+  font-size: clamp(44px, 12vw, 128px);
+  color: #fffcef;
+  text-shadow:
+    0 3px 14px #fff4bc55,
+    0 6px 6px #0008;
+}
+
+#result {
+  border: 1px solid #a5956a;
+  border-radius: 0;
+  padding: 0;
+  color: #e8dec9;
+  background: #202a24;
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  text-align: left;
+  box-shadow: none;
+}
+#result::backdrop {
+  background: #101511aa;
+  backdrop-filter: blur(3px);
+}
+#result .menu-panel {
+  padding: 30px;
+}
+#result h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+#result p {
+  line-height: 1.8;
+  margin: 0 0 12px;
+}
+#result button {
+  margin: 0;
+}
+#result .menu-actions {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0 12px;
+}
+
+/* Match Luzheng's compact touch HUD and staggered combat controls. */
+@media (any-pointer: coarse) {
+  .boss-panel {
+    top: max(10px, env(safe-area-inset-top));
+  }
+  .boss-panel .boss-health-track {
+    height: 6px;
+    margin: 4px 0 6px;
+  }
+  #clock {
+    font-size: 10px;
+    line-height: 14px;
+  }
+  .notice {
+    top: calc(max(10px, env(safe-area-inset-top)) + 58px);
+  }
+  .notice h2 {
+    font-size: 17px;
+    margin: 4px 0;
+  }
+  .raid .party-head {
+    font-size: 9px;
+    margin-top: 3px;
+  }
+  .raid .member {
+    min-height: 20px;
+  }
+  .raid .member progress {
+    height: 3px;
+    margin-top: 2px;
+  }
+  #rescue {
+    font-size: 9px;
+    line-height: 14px;
+  }
+  .touch-actions {
+    display: block;
+    width: 144px;
+    height: 140px;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(20px, env(safe-area-inset-bottom));
+  }
+  .touch-actions button {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+  }
+  .touch-actions button[data-action="shift"] {
+    right: 0;
+    top: 0;
+  }
+  .touch-actions button[data-action="e"] {
+    left: 0;
+    top: 40px;
+    width: 64px;
+    height: 64px;
+  }
+  .touch-actions button[data-action="1"] {
+    right: 0;
+    bottom: 0;
+  }
+  .touch-actions #specialAction {
+    left: 0;
+    right: auto;
+    top: -28px;
+    bottom: auto;
+  }
+  .layers {
+    bottom: max(20px, env(safe-area-inset-bottom));
+  }
+}
+@media (any-pointer: coarse) and (max-height: 360px) {
+  .touch-actions {
+    width: 130px;
+    height: 122px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .touch-actions button {
+    width: 52px;
+    height: 52px;
+  }
+  .touch-actions button[data-action="e"] {
+    width: 56px;
+    height: 56px;
+    top: 34px;
+  }
+  .touch-actions #specialAction {
+    top: -25px;
+  }
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  /* Stack the boss and mechanic below the team/toolbar, as on Luzheng. */
+  .boss-panel {
+    top: calc(max(10px, env(safe-area-inset-top)) + 200px);
+    width: 78vw;
+  }
+  .notice {
+    top: calc(max(10px, env(safe-area-inset-top)) + 262px);
+    width: calc(100% - 28px);
+  }
+  .layers {
+    left: max(16px, env(safe-area-inset-left));
+    width: calc(
+      100% - 196px - env(safe-area-inset-left) - env(safe-area-inset-right)
+    );
+    transform: none;
+    bottom: calc(max(20px, env(safe-area-inset-bottom)) + 24px);
+  }
+  #shieldNotice {
+    top: 55%;
+    max-width: calc(100% - 32px);
+  }
+}
+
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .raid {
+    width: 148px;
+    padding: 4px;
+    font-size: 9px;
+  }
+  .raid .member {
+    min-height: 0;
+    padding: 1px 2px;
+    font-size: 9px;
+    line-height: 12px;
+  }
+  .raid .member progress {
+    height: 2px;
+    margin-top: 1px;
+  }
+  .raid #party {
+    gap: 2px 3px;
+  }
+  .raid .party-head {
+    margin-top: 2px;
+    line-height: 12px;
+  }
+  .raid #rescue {
+    margin-top: 2px;
+    line-height: 12px;
+  }
+  .boss-panel {
+    top: max(12px, env(safe-area-inset-top));
+    left: auto;
+    right: 12px;
+    transform: none;
+    width: calc(100% - 184px);
+  }
+  .boss-panel > div {
+    font-size: 12px;
+  }
+  #clock {
+    font-size: 9px;
+  }
+  .toolbar {
+    top: calc(max(12px, env(safe-area-inset-top)) + 78px);
+    width: calc(100% - 184px);
+    right: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .toolbar button {
+    min-width: 0;
+    min-height: 30px;
+    padding: 3px;
+    font-size: 10px;
+  }
+  .toolbar .touch-only {
+    grid-column: auto;
+  }
+  .notice {
+    top: calc(max(12px, env(safe-area-inset-top)) + 144px);
+  }
+  .notice h2 {
+    margin: 2px 0;
+    font-size: 16px;
+  }
+  .notice p {
+    margin: 2px 0;
+  }
+  .touch-actions {
+    height: 64px;
+    width: 184px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .touch-actions button[data-action="shift"] {
+    left: 0;
+    right: auto;
+    top: 4px;
+    width: 52px;
+    height: 52px;
+  }
+  .touch-actions button[data-action="e"] {
+    left: 59px;
+    top: 0;
+    width: 60px;
+    height: 60px;
+  }
+  .touch-actions button[data-action="1"] {
+    right: 0;
+    top: 4px;
+    width: 52px;
+    height: 52px;
+  }
+  .touch-actions #specialAction {
+    left: auto;
+    right: 0;
+    top: -62px;
+    width: 52px;
+    height: 52px;
+  }
+  .layers {
+    left: 12px;
+    width: calc(100% - 224px);
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  #layerText {
+    font-size: 13px;
+  }
+  #slots {
+    gap: 4px;
+  }
+  #slots i {
+    width: 19px;
+    height: 7px;
+  }
+  .layers small {
+    font-size: 9px;
+  }
+}
+
+/* Menu taps stay native and do not use combat pointer capture. */
+dialog button,
+dialog select,
+dialog a {
+  touch-action: manipulation;
+}
+
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .notice {
+    height: 124px;
+  }
+  .notice #cast {
+    position: absolute;
+    top: 82px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+  }
+}
+
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .toolbar #previous {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .toolbar #next {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .toolbar .touch-only {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}

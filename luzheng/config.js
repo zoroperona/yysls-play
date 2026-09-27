@@ -1,6 +1,6 @@
 // 未经实测的演练参数集中在此。场地坐标均为示意。
 export const CONFIG = {
-  idleSpeed: 2,
+  idleSpeed: 3,
   bossHp: null, // null 按团队输出预算估算；数字可手动覆盖
   bossTargetDuration: 284,
   playerDamageBudget: 0.8,

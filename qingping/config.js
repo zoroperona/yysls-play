@@ -1,0 +1,71 @@
+// World coordinates are metres. Values not confirmed by the user are training approximations.
+export const CONFIG = {
+  openingDuration: 5,
+  arenaRadius: 22,
+  speed: 5,
+  aiSpeed: 6,
+  pickupRadius: 1.8,
+  qingbaiDistance: 8,
+  tangshiDistance: 6, // Keep the name clear of the boss label.
+  greenRadius: 6,
+  hp: 100,
+  healPerSecond: 3,
+  rescues: 5,
+  rescueDelay: 5,
+  rescueHp: 30,
+  idleSpeed: 3,
+  parryWindow: 0.42,
+  dodgeDistance: 3,
+  dodgeCooldown: 2,
+  ringRadius: 7,
+  ringDamage: 40,
+  fireRadius: 10, // User correction: double the previous 5m range.
+  fireAngleDegrees: 30,
+  fireDamage: 36, // User correction: triple the previous 12% per tick.
+  fireTicks: 6,
+  fireWarmup: 2,
+  fireInterval: 1,
+  soulDamage: 70,
+  soulKnockbackDistance: 14,
+  soulKnockbackDuration: 0.6, // Training animation duration.
+  soulFirstShot: 3, // Training delay after marking.
+  soulWaves: 4,
+  soulInterval: 2,
+  soulSpeed: 7,
+  soulHitRadius: 0.8,
+  mistRadius: 3,
+  mistDamage: 30,
+  mistPulses: 6,
+  mistFirstPulse: 3,
+  mistInterval: 1,
+  arrowLength: 8,
+  aimDuration: 10,
+  forcedDuration: 8,
+  forcedSpeed: 1,
+  aimTurnSpeed: Math.PI / 2, // 90 degrees per second while preparing.
+  illusionSafeRadius: 8, // Training centre radius; ring width is user-confirmed.
+  illusionSafeWidth: 2,
+  illusionDamage: 90,
+  aoeDamage: 65,
+  aoeCast: 4,
+  shieldRadius: 6,
+  shieldDuration: 10,
+  shieldCast: 5,
+  shieldChannel: 4,
+  shieldPulses: 5,
+  shieldMissDamage: 35,
+  finalAoeDamage: 30,
+  finalAoeInterval: 3,
+  finalBossSpeed: 4,
+  fanPoisonDuration: Infinity, // Remains through the final shield.
+  fanPoisonDamage: 40,
+  heartHp: 3000, // Five times the previous 600.
+  heartAiDps: 175, // Two temporary-layer windows permit both rescues.
+  sprayWarmup: 5,
+  sprayInterval: 2,
+  sprayFlight: 1.8,
+  attackRange: 12,
+  attackInterval: 0.35,
+  attackDamage: 90,
+  bossHp: 60000,
+};

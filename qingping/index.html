@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#15201e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>青瓶居士 · 机制演练</title>
+    <link rel="stylesheet" href="style.css?v=a53cc621f12e" />
+  </head>
+  <body>
+    <main class="stage">
+      <canvas
+        id="arena"
+        tabindex="0"
+        aria-label="青瓶居士战场：WASD移动，F拾球，Q输出，E卸势，Shift闪避；幻象迷踪准备时W/S沿箭头前后移动、A/D旋转箭头"
+      ></canvas>
+      <div class="boss-panel overlay">
+        <div>青瓶居士 <span id="bossValue"></span></div>
+        <div class="boss-health-track">
+          <progress
+            id="bossHp"
+            max="100"
+            value="100"
+            aria-label="Boss血量"
+          ></progress>
+          <div id="shieldBar" hidden>
+            <div id="shieldFill"></div>
+            <span id="shieldValue"></span>
+          </div>
+        </div>
+        <p id="clock"></p>
+      </div>
+      <nav class="toolbar">
+        <button id="pause">暂停</button><button id="showLog">日志</button
+        ><button id="previous" aria-label="上一个机制">←</button
+        ><button id="next" aria-label="下一个机制">→</button
+        >
+      </nav>
+      <div class="notice overlay">
+        <h2 id="skill"></h2>
+        <p id="hint"></p>
+        <p id="countdown"></p>
+        <div id="cast" hidden>
+          <div id="castLabel"></div>
+          <progress
+            id="castProgress"
+            max="1"
+            value="0"
+            aria-label="超脱凡躯读条"
+          ></progress>
+        </div>
+      </div>
+      <section class="raid overlay" aria-label="团队">
+        <div>团队 <span id="alive"></span></div>
+        <div class="party-head"><span>1 队</span><span>2 队</span></div>
+        <div id="party"></div>
+        <p id="rescue"></p>
+      </section>
+      <div class="layers overlay" aria-live="polite">
+        <div id="layerText">入幻 0 重</div>
+        <div id="slots"><i></i><i></i><i></i></div>
+        <small id="ability"></small>
+        <button id="shieldAction" hidden>开盾 · G</button>
+      </div>
+      <div id="shieldNotice" class="overlay" role="status" hidden>
+        <strong>轮到你开盾</strong>
+        <div id="shieldNoticeText"></div>
+      </div>
+      <div id="death" class="overlay" role="status" hidden>
+        <h2>你已倒地</h2>
+        <p id="reviveStatus"></p>
+      </div>
+      <div class="keys overlay">
+        WASD 移动 · F 拾球 · 按住 Q 输出 · E 卸势 · Shift 闪避
+      </div>
+      <div class="touch-only" id="joystickZone">
+        <div id="joystick"><span id="joystickKnob"></span></div>
+      </div>
+      <div class="touch-actions touch-only">
+        <button id="specialAction" data-action="g" hidden>
+          特殊<small id="specialLabel">开盾</small>
+        </button>
+        <button data-action="shift">闪避</button
+        ><button data-action="e">卸势</button
+        ><button data-action="1">输出<small>按住</small></button>
+      </div>
+      <dialog id="entry">
+        <p class="eyebrow">十人机制演练 · 完整流程</p>
+        <h1>青瓶居士</h1>
+        <p>开场准备5秒，随后吃一球，跟随队友走出幻境。</p>
+        <p class="instructions">
+          你位于1队第一格。衫上、倾白各吃两球并轮流开盾。你只吃一球，负责挡球、离群卸势与跟随箭头进入安全区。
+        </p>
+        <p id="inputHelp"></p>
+        <p class="muted">包含心魔救援与最终破盾；二阶段按 G 或点特殊键。</p>
+        <button id="start" class="primary">开始演练</button
+        ><a href="../luzheng/">返回陆狰演练</a>
+        <p class="home-screen-help" hidden></p>
+      </dialog>
+      <dialog id="menu">
+        <h2>演练暂停</h2>
+        <p>战场已冻结</p>
+        <button id="resume" class="primary">继续</button
+        ><button id="reset">重新开始</button
+        ><button id="fullscreenToggle" hidden>进入全屏</button>
+        <p id="fullscreenStatus" hidden></p>
+        <p class="home-screen-help" hidden></p>
+        <details>
+          <summary>练习章节</summary>
+          <select id="chapter"></select
+          ><button id="practice">从此章节重新练习</button>
+        </details>
+      </dialog>
+      <div id="victoryBanner" role="status" aria-label="克敌制胜" hidden>
+        <span id="victoryText">克敌制胜</span>
+        <img
+          id="victoryImage"
+          src="../assets/luzheng/sprites/victory-calligraphy.png"
+          alt="克敌制胜"
+          draggable="false"
+          hidden
+        />
+      </div>
+      <dialog id="result" aria-labelledby="resultTitle">
+        <div class="menu-panel">
+          <h2 id="resultTitle"></h2>
+          <button id="resultLog">战斗日志</button>
+          <p id="reason"></p>
+          <div class="menu-actions">
+            <button id="retry">重新挑战</button
+            ><button id="dismiss">查看战场</button>
+          </div>
+        </div>
+      </dialog>
+      <dialog id="logMenu">
+        <h2>战斗日志</h2>
+        <pre id="fullLog"></pre>
+        <button id="export">导出日志</button><button id="closeLog">关闭</button>
+      </dialog>
+    </main>
+    <script type="module" src="app.js?v=a53cc621f12e"></script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
-import { bindFullscreen } from "./fullscreen.js?v=8f3c53ef6811";
-import { bindTouchControls } from "./touch-controls.js?v=8f3c53ef6811";
-import { Game, dist } from "./engine.js?v=8f3c53ef6811";
-import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=8f3c53ef6811";
+import { bindFullscreen } from "./fullscreen.js?v=a53cc621f12e";
+import { bindTouchControls } from "./touch-controls.js?v=a53cc621f12e";
+import { Game, dist } from "./engine.js?v=a53cc621f12e";
+import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=a53cc621f12e";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");
@@ -59,7 +59,7 @@ const touch = bindTouchControls({
   action: (key) => game.input(key),
 });
 const mobileLayout = window.matchMedia("(any-pointer: coarse)");
-const fullscreen = bindFullscreen({
+bindFullscreen({
   button: $("fullscreenToggle"),
   status: $("fullscreenStatus"),
   help: document.querySelectorAll(".home-screen-help"),
@@ -185,8 +185,6 @@ function togglePause() {
 }
 $("resume").onclick = start;
 $("start").onclick = () => {
-  // Fullscreen must be requested directly from this user gesture.
-  if (mobileLayout.matches) void fullscreen.enter();
   start();
 };
 $("entryMenu").addEventListener("cancel", (e) => e.preventDefault());
@@ -655,7 +653,7 @@ function updateUI() {
         : "救援次数已用尽 · 血量 0%";
   $("clock").textContent =
     fmt(game.t) +
-    (game.a ? " · 机制 1×" : keys.has(" ") ? " · 空档 3×" : " · 空档 2×");
+    (game.a ? " · 机制 1×" : ` · 空档 ${game.c.idleSpeed}×`);
   $("bossValue").textContent =
     ((game.boss.hp / game.boss.max) * 100).toFixed(1) + "%";
   $("bossHp").value = (game.boss.hp / game.boss.max) * 100;
@@ -753,7 +751,7 @@ function frame(now) {
         dx: (keys.has("d") ? 1 : 0) - (keys.has("a") ? 1 : 0) + touch.dx,
         dy: (keys.has("s") ? 1 : 0) - (keys.has("w") ? 1 : 0) + touch.dy,
         attack: keys.has("q") || touch.attack,
-        fastForward: keys.has(" ") || touch.fastForward,
+
       });
       acc -= 1 / 60;
     }

@@ -10,7 +10,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="../assets/luzheng/sprites/app-icon-192.png" />
     <title>陆狰 · 机制演练</title>
-    <link rel="stylesheet" href="style.css?v=8f3c53ef6811" />
+    <link rel="stylesheet" href="style.css?v=a53cc621f12e" />
   </head>
   <body>
     <!-- 全窗口战场，HUD 覆盖其上；玩家替换所选队伍指定位置。沿用现有素材与机制配色。 -->
@@ -37,7 +37,6 @@
           <button id="previousMechanic" aria-label="上一个机制">← 上一个</button>
           <button id="nextMechanic" aria-label="下一个机制">下一个 →</button>
         </div>
-        <button class="touch-speed" data-action="fastForward" aria-label="按住空档三倍速">按住加速 3×</button>
       </div>
       <dialog id="entryMenu" aria-labelledby="entryTitle">
         <div id="setup">
@@ -67,7 +66,6 @@
       <div class="keys hud">
         <span><kbd>W A S D</kbd> 移动</span><span><kbd>Q</kbd> 输出</span
         ><span><kbd>E</kbd> 卸势</span><span><kbd>Shift</kbd> 闪避</span
-        ><span><kbd>空格</kbd> 按住空档 3×</span
         ><span><kbd>← →</kbd> 切机制</span>
         <span><kbd>Esc</kbd> 暂停</span>
       </div>
@@ -105,7 +103,7 @@
             ><label for="dps">输出 AI 的 DPS（重开生效）</label
             ><input id="dps" type="number" min="0" max="1000" value="70" />
             <p>
-              空档默认 2 倍速，按住空格 3 倍速；机制执行与操作始终 1
+              空档自动 3 倍速；机制执行与操作始终 1
               倍速。点击敌人切换目标。
             </p>
             <p id="score"></p>
@@ -138,6 +136,6 @@
         </div>
       </dialog>
     </main>
-    <script type="module" src="app.js?v=8f3c53ef6811"></script>
+    <script type="module" src="app.js?v=a53cc621f12e"></script>
   </body>
 </html>
