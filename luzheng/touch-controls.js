@@ -8,7 +8,12 @@ export function bindTouchControls({ zone, joystick, knob, buttons, enabled, acti
   const listenRelease = (element, release) => {
     for (const name of ["pointerup", "pointercancel", "lostpointercapture"])
       element.addEventListener(name, release);
-    element.addEventListener("contextmenu", (event) => event.preventDefault());
+    // Some WebKit/WebView callouts begin on touchstart without a contextmenu
+    // event. Cancel only game controls, leaving menus and form fields usable.
+    for (const name of ["touchstart", "touchmove", "contextmenu", "selectstart", "dragstart"])
+      element.addEventListener(name, (event) => {
+        if (event.cancelable) event.preventDefault();
+      }, { passive: false, capture: true });
   };
   function center() {
     state.dx = state.dy = 0;

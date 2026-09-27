@@ -390,8 +390,20 @@ input {
   bottom: 16px;
   gap: 5px;
 }
-.touch button {
+/* Apply directly to controls and their text: do not rely on ancestor
+   user-select rules to suppress native long-press callouts in WebViews. */
+[data-action],
+[data-action] *,
+#joystickZone,
+#joystickZone * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
   touch-action: none;
+}
+[data-action] * {
+  pointer-events: none;
 }
 [hidden] {
   display: none !important;
