@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <title>陆狰 · 机制演练</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=3c583c496c96" />
   </head>
   <body>
     <!-- 全窗口战场，HUD 覆盖其上；玩家替换所选队伍指定位置。沿用现有素材与机制配色。 -->
@@ -100,7 +100,8 @@
         </div>
       </dialog>
       <div id="victoryBanner" role="status" aria-label="克敌制胜" hidden>
-        <img src="../assets/luzheng/sprites/victory-calligraphy.png" alt="克敌制胜" />
+        <span id="victoryText">克敌制胜</span>
+        <img id="victoryImage" src="../assets/luzheng/sprites/victory-calligraphy.png" alt="克敌制胜" draggable="false" hidden />
       </div>
       <dialog id="result" aria-labelledby="resultTitle">
         <div class="menu-panel">
@@ -123,6 +124,6 @@
         </div>
       </dialog>
     </main>
-    <script type="module" src="app.js"></script>
+    <script type="module" src="app.js?v=3c583c496c96"></script>
   </body>
 </html>

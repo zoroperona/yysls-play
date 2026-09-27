@@ -1,4 +1,4 @@
-import { CONFIG } from "./config.js";
+import { CONFIG } from "./config.js?v=3c583c496c96";
 import {
   segmentDistance,
   hitsSword,
@@ -8,8 +8,8 @@ import {
   inCleaveOuter,
   swordImpact,
   blocksBeforeSword,
-} from "./geometry.js";
-import { TIMELINE } from "./timeline.js";
+} from "./geometry.js?v=3c583c496c96";
+import { TIMELINE } from "./timeline.js?v=3c583c496c96";
 export const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 export class Game {
   constructor(settings = {}, practice = null) {

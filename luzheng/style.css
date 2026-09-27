@@ -1,4 +1,6 @@
 :root {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   color: #e8dec9;
   background: #191e1c;
@@ -32,6 +34,9 @@ h1 small {
   margin-top: 6px;
 }
 .stage {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
   position: fixed;
   inset: 0;
   height: 100dvh;
@@ -44,6 +49,7 @@ h1 small {
   touch-action: none;
   outline: none;
 }
+.stage img { -webkit-user-drag: none; }
 .hud {
   position: absolute;
 }
@@ -292,6 +298,12 @@ kbd {
   width: min(850px, 92vw);
   height: auto;
   filter: drop-shadow(0 3px 14px #fff4bc55) drop-shadow(0 6px 6px #0008);
+}
+#victoryText {
+  font-family: "Kaiti SC", "STKaiti", "Songti SC", serif;
+  font-size: clamp(44px, 12vw, 128px);
+  color: #fffcef;
+  text-shadow: 0 3px 14px #fff4bc55, 0 6px 6px #0008;
 }
 dialog {
   border: 1px solid #a5956a;

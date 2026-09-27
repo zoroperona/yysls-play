@@ -1,6 +1,6 @@
-import { bindTouchControls } from "./touch-controls.js";
-import { Game, dist } from "./engine.js";
-import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js";
+import { bindTouchControls } from "./touch-controls.js?v=3c583c496c96";
+import { Game, dist } from "./engine.js?v=3c583c496c96";
+import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=3c583c496c96";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");
@@ -12,12 +12,34 @@ const fmt = (t) =>
     .padStart(2, "0")}`;
 const image = (name) => {
   const i = new Image();
-  i.src = "../assets/luzheng/sprites/" + name + ".png";
+  const url = new URL("../assets/luzheng/sprites/" + name + ".png", import.meta.url);
+  let retries = 0;
+  i.onerror = () => {
+    if (retries++ < 2) setTimeout(() => {
+      url.searchParams.set("retry", String(retries));
+      i.src = url.href;
+    }, 500 * retries);
+  };
+  i.src = url.href;
   return i;
 };
-const bossImg = image("luzheng-boss"),
-  soulImg = image("soul"),
+const bossImg = image("luzheng-boss-display"),
+  soulImg = image("soul-display"),
   teamImg = image("team-chibi");
+const victoryImg = $("victoryImage");
+let victoryRetries = 0;
+victoryImg.onload = () => { $("victoryText").hidden = true; victoryImg.hidden = false; };
+victoryImg.onerror = () => {
+  $("victoryText").hidden = false;
+  victoryImg.hidden = true;
+  if (victoryRetries++ < 2) setTimeout(() => {
+    const url = new URL(victoryImg.src);
+    url.searchParams.set("retry", String(victoryRetries));
+    victoryImg.src = url.href;
+  }, 500 * victoryRetries);
+};
+if (victoryImg.complete && victoryImg.naturalWidth) victoryImg.onload();
+else if (victoryImg.complete) victoryImg.onerror();
 let game = new Game(),
   started = false,
   paused = true,
@@ -34,6 +56,8 @@ const touch = bindTouchControls({
   action: (key) => game.input(key),
 });
 const mobileLayout = window.matchMedia("(any-pointer: coarse)");
+for (const event of ["contextmenu", "selectstart", "dragstart"])
+  document.querySelector(".stage").addEventListener(event, (e) => e.preventDefault());
 const history = [];
 function logText() {
   return [
@@ -251,14 +275,21 @@ function ring(x, y, r, color, width = 1) {
   ctx.lineWidth = width;
   ctx.stroke();
 }
-const view = { x: 0, y: 0, scale: 1 };
+const view = { x: 0, y: 0, scale: 1, width: 0, height: 0, dpr: 1 };
 function resize() {
   touch.reset();
   keys.clear();
   if (mobileLayout.matches && window.innerHeight > window.innerWidth && started && !paused)
     togglePause();
+  syncCanvasSize();
+}
+function syncCanvasSize() {
   const { width, height } = canvas.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
+  if (!width || !height) return;
+  // Cap backing-store memory on iOS; CSS size and game coordinates remain unchanged.
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (view.width === width && view.height === height && view.dpr === dpr) return;
+  Object.assign(view, { width, height, dpr });
   canvas.width = Math.round(width * dpr);
   canvas.height = Math.round(height * dpr);
   view.x = width / 2;
@@ -269,13 +300,18 @@ function resize() {
   );
 }
 window.addEventListener("resize", resize);
+window.addEventListener("orientationchange", resize);
+window.visualViewport?.addEventListener("resize", resize);
+new ResizeObserver(resize).observe(canvas);
 mobileLayout.addEventListener("change", resize);
 resize();
 function render() {
+  // Safari can change CSS viewport size after its window resize event.
+  syncCanvasSize();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = view.dpr;
   ctx.setTransform(
     dpr * view.scale,
     0,
@@ -482,6 +518,10 @@ function render() {
       ctx.fill();
       ctx.drawImage(bossImg, b.x - 24, b.y - 25, 48, 51);
       ctx.restore();
+    } else {
+      ctx.fillStyle = "#663e30";
+      ctx.beginPath(); ctx.arc(b.x, b.y, 24, 0, Math.PI * 2); ctx.fill();
+      text("陆", b.x, b.y + 7, "#fff0ac", 22);
     }
     ring(b.x, b.y, 26, "#ae654d", 2);
     text("陆狰", b.x, b.y + 43);
@@ -496,6 +536,9 @@ function render() {
         ctx.shadowBlur = 12;
         ctx.drawImage(soulImg, a.x - 36, a.y - 43, 72, 78);
         ctx.restore();
+      } else if (a.id === "soul") {
+        ctx.beginPath(); ctx.arc(a.x, a.y, 25, 0, Math.PI * 2); ctx.fill();
+        text("魂", a.x, a.y + 7, "#33281a", 22);
       } else ctx.fillRect(a.x - 7, a.y - 25, 14, 43);
       text(a.name, a.x, a.id === "soul" ? a.y - 55 : a.y + 38, "#fff0ac", 15);
       text(
