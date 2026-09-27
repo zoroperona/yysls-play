@@ -82,7 +82,7 @@ export const TIMELINE = [
     hint: "选择红条，在靠近外场的一侧卸势",
   },
   {
-    at: 292,
+    at: 277,
     bossHpRatio: 0.1,
     id: "rage-lines-slow",
     name: "怒斩 · 慢 DPS 追加",

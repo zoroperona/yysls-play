@@ -91,6 +91,11 @@ export class Game {
   log(s) {
     this.logs.unshift({ t: this.t, s });
   }
+  retryEvent() {
+    const event = this.a || [...this.queue].reverse().find((e) => e.started) ||
+      this.jumpTarget || this.practice;
+    return event ? TIMELINE.find((e) => e.at === event.at && e.id === event.id) : null;
+  }
   jumpTo(event) {
     if (this.status !== "running") return false;
     this.log("跳转至 " + event.name + "（保留血量与救援次数）");
@@ -129,6 +134,15 @@ export class Game {
       1,
       Math.round(this.boss.max * (event?.bossHpRatio ?? 1)),
     );
+  }
+  bossDamageScale() {
+    return this.c.calibrateFinalDps && this.a?.id === "rage-lines-slow"
+      ? Math.max(
+          1,
+          (this.boss.max * this.a.bossHpRatio) /
+            Math.max(1, this.bossBudgetDps * this.a.duration),
+        )
+      : 1;
   }
   damage(p, n, why) {
     if (p.hp <= 0) return;
@@ -217,7 +231,12 @@ export class Game {
         (q) => q.id === this.target && q.hp > 0 && !q.expired,
       );
       if (q && this.canAttack(p, q) && dist(p, q) < this.c.attackRange) {
-        q.hp = Math.max(0, q.hp - this.c.attackDamage);
+        q.hp = Math.max(
+          0,
+          q.hp -
+            this.c.attackDamage *
+              (q.id === "boss" ? this.bossDamageScale() : 1),
+        );
         this.lastAttack = this.real || 0;
         this.effects ??= [];
         this.effects.push({
@@ -406,6 +425,7 @@ export class Game {
             target.hp -
               (p.healer ? this.c.healerDps : this.c.aiDps) *
                 dt *
+                (target.id === "boss" ? this.bossDamageScale() : 1) *
                 (this.a?.id === "small-swords"
                   ? this.c.aiSwordDamageMultiplier
                   : 1),
@@ -971,7 +991,11 @@ export class Game {
         this.finish("wipe", "DPS 不足：第二轮怒斩结束，陆狰仍存活");
         return;
       }
-      if (a.id === "cleave") this.divided = false;
+      if (a.id === "cleave" && this.status === "running") {
+        this.divided = false;
+        this.boss.hp = Math.min(this.boss.hp, Math.round(this.boss.max * this.c.cleaveEndBossRatio));
+        this.log("力劈完成：Boss 血量降至 " + (this.boss.hp / this.boss.max * 100).toFixed(1) + "%，继续输出击杀");
+      }
       this.a = null;
       this.zones = [];
       if (a.id !== "rally" && a.id !== "flying-knives") this.boss.x = 100;
@@ -1001,8 +1025,29 @@ export class Game {
     for (const e of this.queue)
       if (!e.started && this.t >= e.at) {
         e.started = true;
+        if (this.c.syncBossAtMechanics && this.boss.hp > 0) {
+          const before = this.boss.hp;
+          this.boss.hp = Math.min(
+            before,
+            Math.round(this.boss.max * e.bossHpRatio),
+          );
+          this.log(
+            e.name +
+              "：录像血量节点 " +
+              Math.round(e.bossHpRatio * 100) +
+              "%，同步至 " +
+              ((this.boss.hp / this.boss.max) * 100).toFixed(1) +
+              "%（不补血）",
+          );
+        }
         this.jumpTarget = null;
         this.a = { ...e, done: new Set(), slot: -1, beats: 0, missed: 0 };
+        if (e.id === "rage-lines-slow" && this.c.calibrateFinalDps)
+          this.log(
+            "最终 DPS 检查：Boss 受伤倍率 " +
+              this.bossDamageScale().toFixed(2) +
+              "，按 7 秒及玩家 80% 输出预算校准",
+          );
         this.adds = [];
         this.boss.x =
           e.id === "flying-knives"

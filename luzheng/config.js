@@ -2,8 +2,10 @@
 export const CONFIG = {
   idleSpeed: 2,
   bossHp: null, // null 按团队输出预算估算；数字可手动覆盖
-  bossTargetDuration: 299,
+  bossTargetDuration: 284,
   playerDamageBudget: 0.8,
+  syncBossAtMechanics: true,
+  calibrateFinalDps: true,
   aiDps: 70,
   healerDps: 20,
   attackDamage: 140,
@@ -25,6 +27,7 @@ export const CONFIG = {
   swordHp: 2100,
   aiSwordDamageMultiplier: 1.6,
   cleaveImpactAt: 5,
+  cleaveEndBossRatio: 0.05,
   soulHp: 9600,
   soulResolveAt: 18,
   soulBossOffset: 105,

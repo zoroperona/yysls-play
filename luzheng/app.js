@@ -72,7 +72,12 @@ PRACTICE_OPTIONS.forEach((e) => {
   o.textContent = fmt(e.at) + " " + e.name;
   $("chapter").append(o);
 });
+let victoryFor = null, victoryFinished = false, victoryAnimation = null;
 function reset(practiceOverride) {
+  victoryAnimation?.cancel();
+  victoryFor = null;
+  victoryFinished = false;
+  $("victoryBanner").hidden = true;
   if (game.logs.length)
     history.push(
       "# " +
@@ -639,7 +644,27 @@ function updateUI() {
   $("log").innerHTML = game.logs
     .map((l) => `<li><time>${fmt(l.t)}</time>${l.s}</li>`)
     .join("");
-  const show = game.status !== "running" && !resultDismissed,
+  if (game.status === "victory" && victoryFor !== game) {
+    victoryFor = game;
+    const wonGame = game;
+    victoryFinished = false;
+    $("victoryBanner").hidden = false;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    victoryAnimation = $("victoryBanner").animate([
+      { opacity: 0, transform: reduced ? "none" : "scale(1.08)", offset: 0 },
+      { opacity: 1, transform: "scale(1)", offset: .2 },
+      { opacity: 1, transform: "scale(1)", offset: .7 },
+      { opacity: 0, transform: reduced ? "none" : "scale(.98)", offset: 1 },
+    ], { duration: reduced ? 1600 : 3200, easing: "ease-in-out", fill: "forwards" });
+    victoryAnimation.onfinish = () => {
+      if (game !== wonGame) return;
+      victoryFinished = true;
+      $("victoryBanner").hidden = true;
+      updateUI();
+    };
+  }
+  const show = game.status !== "running" && !resultDismissed &&
+      (game.status !== "victory" || victoryFinished),
     wasHidden = !$("result").open;
   if (show && wasHidden) $("result").showModal();
   if (!show && !wasHidden) $("result").close();
