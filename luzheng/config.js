@@ -6,6 +6,7 @@ export const CONFIG = {
   playerDamageBudget: 0.8,
   syncBossAtMechanics: true,
   calibrateFinalDps: true,
+  finalDpsTargetDuration: 5.5,
   aiDps: 70,
   healerDps: 20,
   attackDamage: 140,

@@ -5,7 +5,7 @@ import {
   STAT_META,
   calculateComparison,
   deepClone,
-} from "./model.js?v=37b4c61acea4";
+} from "./model.js?v=8d4454741acb";
 
 const STORAGE_KEY = "yysls-dps-simulator-v1";
 

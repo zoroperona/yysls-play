@@ -1,4 +1,4 @@
-import { CONFIG } from "./config.js?v=37b4c61acea4";
+import { CONFIG } from "./config.js?v=8d4454741acb";
 import {
   segmentDistance,
   hitsSword,
@@ -8,8 +8,8 @@ import {
   inCleaveOuter,
   swordImpact,
   blocksBeforeSword,
-} from "./geometry.js?v=37b4c61acea4";
-import { TIMELINE } from "./timeline.js?v=37b4c61acea4";
+} from "./geometry.js?v=8d4454741acb";
+import { TIMELINE } from "./timeline.js?v=8d4454741acb";
 export const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 export class Game {
   constructor(settings = {}, practice = null) {
@@ -140,7 +140,7 @@ export class Game {
       ? Math.max(
           1,
           (this.boss.max * this.a.bossHpRatio) /
-            Math.max(1, this.bossBudgetDps * this.a.duration),
+            Math.max(1, this.bossBudgetDps * this.c.finalDpsTargetDuration),
         )
       : 1;
   }
@@ -1047,7 +1047,9 @@ export class Game {
           this.log(
             "最终 DPS 检查：Boss 受伤倍率 " +
               this.bossDamageScale().toFixed(2) +
-              "，按 7 秒及玩家 80% 输出预算校准",
+              "，按 " +
+              this.c.finalDpsTargetDuration +
+              " 秒及玩家 80% 输出预算校准",
           );
         this.adds = [];
         this.boss.x =

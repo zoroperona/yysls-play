@@ -1,6 +1,7 @@
-import { bindTouchControls } from "./touch-controls.js?v=37b4c61acea4";
-import { Game, dist } from "./engine.js?v=37b4c61acea4";
-import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=37b4c61acea4";
+import { bindFullscreen } from "./fullscreen.js?v=8d4454741acb";
+import { bindTouchControls } from "./touch-controls.js?v=8d4454741acb";
+import { Game, dist } from "./engine.js?v=8d4454741acb";
+import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=8d4454741acb";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");
@@ -58,6 +59,15 @@ const touch = bindTouchControls({
   action: (key) => game.input(key),
 });
 const mobileLayout = window.matchMedia("(any-pointer: coarse)");
+const fullscreen = bindFullscreen({
+  button: $("fullscreenToggle"),
+  status: $("fullscreenStatus"),
+  help: document.querySelectorAll(".home-screen-help"),
+  mobile: mobileLayout,
+  onExit: () => {
+    if (started && !paused && game.status === "running") togglePause();
+  },
+});
 for (const event of ["contextmenu", "selectstart", "dragstart"])
   document.querySelector(".stage").addEventListener(event, (e) => e.preventDefault());
 const history = [];
@@ -174,7 +184,11 @@ function togglePause() {
   updateUI();
 }
 $("resume").onclick = start;
-$("start").onclick = start;
+$("start").onclick = () => {
+  // Fullscreen must be requested directly from this user gesture.
+  if (mobileLayout.matches) void fullscreen.enter();
+  start();
+};
 $("entryMenu").addEventListener("cancel", (e) => e.preventDefault());
 $("pauseMenu").addEventListener("cancel", (e) => {
   e.preventDefault();

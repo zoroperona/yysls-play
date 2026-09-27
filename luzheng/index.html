@@ -3,8 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#191e1c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="陆狰演练" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="../assets/luzheng/sprites/app-icon-192.png" />
     <title>陆狰 · 机制演练</title>
-    <link rel="stylesheet" href="style.css?v=37b4c61acea4" />
+    <link rel="stylesheet" href="style.css?v=8d4454741acb" />
   </head>
   <body>
     <!-- 全窗口战场，HUD 覆盖其上；玩家替换所选队伍指定位置。沿用现有素材与机制配色。 -->
@@ -43,7 +49,9 @@
             <option value="2">2 队 · 右半场</option>
           </select>
           <p id="assignment"></p>
+          <p class="contact-note">任何疑难杂症和缺陷请联系倾白丶老师</p>
           <button id="start">开始游戏</button>
+          <p class="home-screen-help" hidden></p>
         </div>
       </dialog>
       <div class="notice hud">
@@ -76,11 +84,13 @@
           <button data-action="1" aria-label="输出，按住持续攻击">输出<small>按住</small></button>
         </div>
       </div>
-      <p class="rotate-hint">请将手机横过来，使用双手操作</p>
       <dialog id="pauseMenu" aria-labelledby="pauseTitle">
         <div class="menu-panel">
           <h2 id="pauseTitle">演练暂停</h2>
           <button id="pauseLog">战斗日志</button>
+          <button id="fullscreenToggle" hidden>进入全屏</button>
+          <p id="fullscreenStatus" role="status" hidden></p>
+          <p class="home-screen-help" hidden></p>
           <p class="muted">战场已冻结 · Esc 返回</p>
           <div class="menu-actions">
             <button id="resume">继续游戏</button
@@ -127,6 +137,6 @@
         </div>
       </dialog>
     </main>
-    <script type="module" src="app.js?v=37b4c61acea4"></script>
+    <script type="module" src="app.js?v=8d4454741acb"></script>
   </body>
 </html>

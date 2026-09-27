@@ -195,6 +195,12 @@ select {
   line-height: 1.8;
   margin-top: 12px;
 }
+.contact-note {
+  margin-top: 16px;
+  color: #d6c697;
+  font-size: 13px;
+  line-height: 1.6;
+}
 #pause {
   float: right;
   min-width: 120px;
@@ -448,9 +454,53 @@ input {
   }
 }
 /* Touch controls occupy the side lanes, leaving the arena clear. */
-.rotate-hint { display: none; }
+.home-screen-help, #fullscreenStatus { margin-top: 12px; font-size: 12px; line-height: 1.6; color: #c3c9b4; }
 .touch-speed { display: none; }
 #mechanicControls { display: flex; gap: 6px; clear: both; padding-top: 8px; justify-content: flex-end; }
+/* Compact keyboard/mouse windows, including desktop WeChat's narrow viewer. */
+@media (max-width: 760px) {
+  .entry {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 180px;
+    gap: 6px;
+  }
+  .entry button {
+    min-width: 0;
+    min-height: 36px;
+    padding: 7px 4px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .entry #pause { min-width: 0; float: none; }
+  .entry #showLog { margin: 0; float: none; }
+  .entry #mechanicControls {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-top: 0;
+  }
+  .raid { width: 184px; }
+  .raid-title { font-size: 10px; margin-bottom: 4px; }
+  #party { gap: 5px; }
+  .team-column { gap: 3px; }
+  .team-heading { font-size: 10px; margin-bottom: 1px; }
+  .member { padding: 3px 4px; font-size: 10px; }
+  .member b { font-size: 9px; }
+  .member progress { height: 3px; margin-top: 3px; }
+  #rescue { font-size: 9px; margin-top: 5px; }
+}
+@media (max-width: 600px) {
+  .entry { width: 164px; }
+  .raid { width: 168px; }
+  .topline { top: 12px; }
+  .boss-hp span { font-size: 15px; }
+  #clock { font-size: 10px; }
+  .notice { top: 112px; width: calc(100% - 24px); }
+  .notice h2 { font-size: 18px; }
+  .notice p { font-size: 11px; }
+  .keys { font-size: 10px; }
+}
 @media (any-pointer: coarse) {
   .keys { display: none; }
   .touch {
@@ -574,15 +624,4 @@ input {
 @media (any-pointer: coarse) and (orientation: portrait) {
   .topline { top: 180px; width: 72vw; }
   .notice { top: 240px; width: 86vw; }
-  .touch-actions { bottom: max(64px, calc(env(safe-area-inset-bottom) + 52px)); }
-  .rotate-hint {
-    display: block;
-    position: absolute;
-    left: 16px; right: 16px; bottom: max(12px, env(safe-area-inset-bottom));
-    text-align: center;
-    padding: 10px;
-    background: #15221cee;
-    border: 1px solid #a5956a;
-    pointer-events: none;
-  }
 }

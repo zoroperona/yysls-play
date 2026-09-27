@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "陆狰 · 机制演练",
+  "short_name": "陆狰演练",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#191e1c",
+  "theme_color": "#191e1c",
+  "icons": [
+    { "src": "../assets/luzheng/sprites/app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "../assets/luzheng/sprites/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

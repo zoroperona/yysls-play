@@ -83,7 +83,7 @@ export const TIMELINE = [
   },
   {
     at: 277,
-    bossHpRatio: 0.1,
+    bossHpRatio: 0.05,
     id: "rage-lines-slow",
     name: "怒斩 · 慢 DPS 追加",
     duration: 7,
