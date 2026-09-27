@@ -1,6 +1,8 @@
 // Pointer ownership lets movement, held attack and individual parries coexist.
-export function bindTouchControls({ joystick, knob, buttons, enabled, action }) {
+export function bindTouchControls({ zone, joystick, knob, buttons, enabled, action, tap = () => {} }) {
   let movementPointer = null;
+  let origin = { x: 0, y: 0 };
+  let dragged = false;
   const held = new Map();
   const state = { dx: 0, dy: 0, attack: false, fastForward: false, reset };
   const listenRelease = (element, release) => {
@@ -17,8 +19,8 @@ export function bindTouchControls({ joystick, knob, buttons, enabled, action }) 
     const pointer = movementPointer;
     movementPointer = null;
     center();
-    if (pointer !== null && joystick.hasPointerCapture(pointer))
-      joystick.releasePointerCapture(pointer);
+    if (pointer !== null && zone.hasPointerCapture(pointer))
+      zone.releasePointerCapture(pointer);
     const captured = [...held];
     held.clear();
     state.attack = false;
@@ -30,32 +32,41 @@ export function bindTouchControls({ joystick, knob, buttons, enabled, action }) 
   }
   function move(event) {
     const rect = joystick.getBoundingClientRect();
-    const x = event.clientX - rect.left - rect.width / 2;
-    const y = event.clientY - rect.top - rect.height / 2;
+    const x = event.clientX - origin.x;
+    const y = event.clientY - origin.y;
     const length = Math.hypot(x, y);
+    if (length > 8) dragged = true;
     const radius = rect.width * 0.32;
     const ratio = length ? Math.min(1, radius / length) : 0;
     state.dx = length > 8 ? x / length : 0;
     state.dy = length > 8 ? y / length : 0;
     knob.style.transform = `translate(-50%, -50%) translate(${x * ratio}px, ${y * ratio}px)`;
   }
-  joystick.addEventListener("pointerdown", (event) => {
+  zone.addEventListener("pointerdown", (event) => {
     if (!enabled() || movementPointer !== null || event.button !== 0) return;
     event.preventDefault();
     movementPointer = event.pointerId;
-    joystick.setPointerCapture(event.pointerId);
+    origin = { x: event.clientX, y: event.clientY };
+    dragged = false;
+    const rect = zone.getBoundingClientRect();
+    joystick.style.left = `${origin.x - rect.left}px`;
+    joystick.style.top = `${origin.y - rect.top}px`;
+    zone.setPointerCapture(event.pointerId);
     joystick.classList.add("active");
     move(event);
   });
-  joystick.addEventListener("pointermove", (event) => {
+  zone.addEventListener("pointermove", (event) => {
     if (event.pointerId !== movementPointer) return;
     if (!enabled()) { reset(); return; }
     move(event);
   });
-  listenRelease(joystick, (event) => {
+  listenRelease(zone, (event) => {
     if (event.pointerId !== movementPointer) return;
+    move(event);
+    const isTap = event.type === "pointerup" && !dragged && enabled();
     movementPointer = null;
     center();
+    if (isTap) tap(event);
   });
   for (const button of buttons) {
     button.addEventListener("pointerdown", (event) => {

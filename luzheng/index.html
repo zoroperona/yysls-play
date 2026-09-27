@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <title>陆狰 · 机制演练</title>
-    <link rel="stylesheet" href="style.css?v=bc5b31e056cb" />
+    <link rel="stylesheet" href="style.css?v=37b4c61acea4" />
   </head>
   <body>
     <!-- 全窗口战场，HUD 覆盖其上；玩家替换所选队伍指定位置。沿用现有素材与机制配色。 -->
@@ -50,6 +50,7 @@
         <h2 id="skill"></h2>
         <p id="hint"></p>
       </div>
+      <div id="targetNotice" class="hud" role="status" hidden>战魂出现 · 点选战魂，切换攻击目标</div>
       <section class="raid hud" aria-label="团队框架">
         <div class="raid-title">团队 <span id="alive"></span></div>
         <div id="party"></div>
@@ -63,9 +64,11 @@
         <span><kbd>Esc</kbd> 暂停</span>
       </div>
       <div class="touch hud" id="touchControls" aria-label="触屏操作">
-        <div id="joystick" aria-label="方向摇杆，拖动移动，松手停止">
+        <div id="joystickZone" aria-label="左侧移动区域，按下后拖动，松手停止">
+        <div id="joystick" aria-hidden="true">
           <span class="joystick-cross" aria-hidden="true"></span>
           <span id="joystickKnob" aria-hidden="true"></span>
+        </div>
         </div>
         <div class="touch-actions">
           <button data-action="shift" aria-label="闪避，点击触发">闪避<small>点击</small></button>
@@ -124,6 +127,6 @@
         </div>
       </dialog>
     </main>
-    <script type="module" src="app.js?v=bc5b31e056cb"></script>
+    <script type="module" src="app.js?v=37b4c61acea4"></script>
   </body>
 </html>

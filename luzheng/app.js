@@ -1,6 +1,6 @@
-import { bindTouchControls } from "./touch-controls.js?v=bc5b31e056cb";
-import { Game, dist } from "./engine.js?v=bc5b31e056cb";
-import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=bc5b31e056cb";
+import { bindTouchControls } from "./touch-controls.js?v=37b4c61acea4";
+import { Game, dist } from "./engine.js?v=37b4c61acea4";
+import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=37b4c61acea4";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");
@@ -49,6 +49,8 @@ let game = new Game(),
   uiTimer = 0,
   resultDismissed = false;
 const touch = bindTouchControls({
+  zone: $("joystickZone"),
+  tap: (event) => canvas.onclick(event),
   joystick: $("joystick"),
   knob: $("joystickKnob"),
   buttons: document.querySelectorAll("[data-action]"),
@@ -137,6 +139,7 @@ function reset(practiceOverride) {
 }
 $("reset").onclick = reset;
 $("retry").onclick = () => {
+  if (game.status === "victory") $("chapter").value = "all";
   const event = game.status === "wipe" ? game.retryEvent() : null;
   reset(event);
   start();
@@ -618,6 +621,10 @@ function render() {
   ctx.restore();
 }
 function updateUI() {
+  $("targetNotice").hidden = !(
+    started && game.status === "running" && game.a?.id === "rally" && game.target !== "soul" &&
+    game.adds.some((add) => add.id === "soul" && add.hp > 0 && game.t < add.deadline)
+  );
   const dead = game.party[0].hp <= 0;
   const controlsDisabled = !started || paused || dead || game.status !== "running";
   $("touchControls").hidden = controlsDisabled;
@@ -717,7 +724,9 @@ function updateUI() {
     ] || "";
   $("resultReason").textContent = game.endReason || "";
   const retryEvent = game.status === "wipe" ? game.retryEvent() : null;
-  $("retry").textContent = retryEvent ? "重试当前机制 · " + retryEvent.name : "重新挑战";
+  $("retry").textContent = game.status === "victory"
+    ? "从头再来"
+    : retryEvent ? "重试当前机制 · " + retryEvent.name : "重新挑战";
   if (show && wasHidden) $("retry").focus();
 }
 function frame(now) {

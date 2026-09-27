@@ -1,4 +1,4 @@
-import { CONFIG } from "./config.js?v=bc5b31e056cb";
+import { CONFIG } from "./config.js?v=37b4c61acea4";
 import {
   segmentDistance,
   hitsSword,
@@ -8,8 +8,8 @@ import {
   inCleaveOuter,
   swordImpact,
   blocksBeforeSword,
-} from "./geometry.js?v=bc5b31e056cb";
-import { TIMELINE } from "./timeline.js?v=bc5b31e056cb";
+} from "./geometry.js?v=37b4c61acea4";
+import { TIMELINE } from "./timeline.js?v=37b4c61acea4";
 export const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 export class Game {
   constructor(settings = {}, practice = null) {
@@ -427,7 +427,8 @@ export class Game {
                 dt *
                 (target.id === "boss" ? this.bossDamageScale() : 1) *
                 (this.a?.id === "small-swords"
-                  ? this.c.aiSwordDamageMultiplier
+                  ? this.c.aiSwordDamageMultiplier *
+                    (p.team !== this.playerTeam ? this.c.fullAiSideSwordDamageMultiplier : 1)
                   : 1),
           );
       }

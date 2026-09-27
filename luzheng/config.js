@@ -24,8 +24,9 @@ export const CONFIG = {
   rescueTime: 5,
   rescueHp: 30,
   rescues: 5,
-  swordHp: 2100,
+  swordHp: 3780, // 3150 再提高 20%；默认演练故意留一把小剑，不要求 AI 全清
   aiSwordDamageMultiplier: 1.6,
+  fullAiSideSwordDamageMultiplier: 1.5, // 保留既定补偿，不随加血提高到 1.8 抵消留剑设计
   cleaveImpactAt: 5,
   cleaveEndBossRatio: 0.05,
   soulHp: 9600,
