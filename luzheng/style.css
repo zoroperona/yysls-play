@@ -398,13 +398,133 @@ input {
     display: none;
   }
 }
-@media (pointer: coarse) {
+/* Touch controls occupy the side lanes, leaving the arena clear. */
+.rotate-hint { display: none; }
+.touch-speed { display: none; }
+#mechanicControls { display: flex; gap: 6px; clear: both; padding-top: 8px; justify-content: flex-end; }
+@media (any-pointer: coarse) {
+  .keys { display: none; }
   .touch {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 300px;
+    display: block;
+    inset: 0;
+    max-width: none;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
-  .keys {
-    display: none;
+  #joystick {
+    position: absolute;
+    left: max(24px, env(safe-area-inset-left));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: clamp(100px, 29dvh, 136px);
+    aspect-ratio: 1;
+    border: 1px solid #b8b08c80;
+    border-radius: 50%;
+    background: #15221c99;
+    box-shadow: inset 0 0 0 12px #b8b08c0c;
+    pointer-events: auto;
+    touch-action: none;
+  }
+  .joystick-cross::before, .joystick-cross::after {
+    content: "";
+    position: absolute;
+    background: #b8b08c35;
+    top: 50%; left: 15%; width: 70%; height: 1px;
+  }
+  .joystick-cross::after { transform: rotate(90deg); }
+  #joystickKnob {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 42%; aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: #65705bef;
+    border: 1px solid #e5d4a1;
+    box-shadow: 0 3px 12px #0006;
+    pointer-events: none;
+  }
+  #joystick.active { border-color: #e5d4a1; }
+  .touch-actions {
+    position: absolute;
+    right: max(22px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    width: 152px;
+    height: 144px;
+    pointer-events: auto;
+  }
+  .touch-actions button {
+    position: absolute;
+    width: 64px;
+    aspect-ratio: 1;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid #bdac7d;
+    background: #29372eee;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .touch-actions button[data-action="shift"] { right: 0; top: 0; }
+  .touch-actions button[data-action="e"] { left: 0; top: 40px; }
+  .touch-actions button[data-action="1"] { right: 0; bottom: 0; }
+  .touch-actions small { display: block; margin-top: 3px; font-size: 10px; font-weight: 400; color: #c3c9b4; }
+  .touch-actions button.active { background: #697152; box-shadow: 0 0 0 4px #ddc17b30; }
+  .topline { top: max(10px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: 32vw; }
+  .boss-hp span { font-size: 14px; line-height: 20px; }
+  .boss-hp progress { display: block; height: 4px; margin-top: 4px; }
+  #clock { font-size: 10px; line-height: 14px; margin-top: 4px; }
+  .entry { top: max(8px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); width: 152px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .entry button { min-width: 0; min-height: 44px; padding: 8px 4px; font-size: 12px; white-space: nowrap; }
+  #pause { min-width: 0; float: none; }
+  #mechanicControls { grid-column: 1 / -1; padding: 0; display: grid; grid-template-columns: 1fr 1fr; }
+  .touch-speed { display: block; grid-column: 1 / -1; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .touch-speed.active { background: #697152; }
+  #showLog { margin: 0; }
+  .notice { top: 65px; left: 50%; transform: translateX(-50%); width: 48vw; }
+  .notice h2 { font-size: 17px; margin-bottom: 2px; }
+  .notice p { font-size: 11px; line-height: 1.4; }
+  .raid {
+    left: max(12px, env(safe-area-inset-left));
+    top: max(10px, env(safe-area-inset-top));
+    bottom: auto;
+    width: 156px;
+  }
+  .raid-title { font-size: 10px; margin-bottom: 3px; }
+  #party { gap: 5px; }
+  .team-column { gap: 2px; }
+  .team-heading { font-size: 9px; margin: 0; }
+  .member { padding: 2px 3px; font-size: 10px; }
+  .member b { font-size: 9px; }
+  .member progress { height: 3px; margin-top: 2px; }
+  #rescue { font-size: 9px; margin-top: 4px; }
+  #setup { padding: 20px 28px; }
+  #entryTitle { font-size: 28px; margin-bottom: 16px; }
+  #start { margin-top: 16px; padding: 10px; }
+  .menu-panel { padding: 20px; }
+  #deathNotice { padding: 12px 18px; }
+  #deathNotice h2 { font-size: 22px; }
+}
+@media (any-pointer: coarse) and (max-height: 360px) {
+  .touch-actions { width: 136px; height: 124px; bottom: max(16px, env(safe-area-inset-bottom)); }
+  .touch-actions button { width: 56px; font-size: 15px; }
+  .touch-actions button[data-action="e"] { top: 34px; }
+  .raid { width: 144px; }
+  .member { padding: 1px 3px; font-size: 9px; }
+  .member progress { margin-top: 1px; height: 2px; }
+  .raid-title, .team-heading, #rescue { font-size: 8px; }
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .topline { top: 180px; width: 72vw; }
+  .notice { top: 240px; width: 86vw; }
+  #joystick, .touch-actions { bottom: max(64px, calc(env(safe-area-inset-bottom) + 52px)); }
+  .rotate-hint {
+    display: block;
+    position: absolute;
+    left: 16px; right: 16px; bottom: max(12px, env(safe-area-inset-bottom));
+    text-align: center;
+    padding: 10px;
+    background: #15221cee;
+    border: 1px solid #a5956a;
+    pointer-events: none;
   }
 }

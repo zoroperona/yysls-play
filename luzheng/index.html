@@ -2,7 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <title>陆狰 · 机制演练</title>
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -11,7 +11,7 @@
     <main class="stage">
       <canvas
         id="arena"
-        aria-label="陆狰战场，WASD 移动，1 输出，E 卸势，Shift 闪避"
+        aria-label="陆狰战场，WASD 移动，Q 输出，E 卸势，Shift 闪避"
         tabindex="0"
       ></canvas>
       <div id="deathNotice" class="hud" role="status" hidden>
@@ -27,6 +27,11 @@
       <div class="entry hud">
         <button id="pause" hidden>暂停 · Esc</button
         ><button id="showLog">战斗日志</button>
+        <div id="mechanicControls" hidden aria-label="切换机制">
+          <button id="previousMechanic" aria-label="上一个机制">← 上一个</button>
+          <button id="nextMechanic" aria-label="下一个机制">下一个 →</button>
+        </div>
+        <button class="touch-speed" data-action="fastForward" aria-label="按住空档三倍速">按住加速 3×</button>
       </div>
       <dialog id="entryMenu" aria-labelledby="entryTitle">
         <div id="setup">
@@ -51,19 +56,24 @@
         <p id="rescue"></p>
       </section>
       <div class="keys hud">
-        <span><kbd>W A S D</kbd> 移动</span><span><kbd>1</kbd> 输出</span
+        <span><kbd>W A S D</kbd> 移动</span><span><kbd>Q</kbd> 输出</span
         ><span><kbd>E</kbd> 卸势</span><span><kbd>Shift</kbd> 闪避</span
         ><span><kbd>空格</kbd> 按住空档 3×</span
         ><span><kbd>← →</kbd> 切机制</span>
         <span><kbd>Esc</kbd> 暂停</span>
       </div>
-      <div class="touch hud">
-        <button data-move="0,-1">↑</button><button data-move="-1,0">←</button
-        ><button data-move="0,1">↓</button><button data-move="1,0">→</button
-        ><button data-action="1">输出</button
-        ><button data-action="e">卸势</button
-        ><button data-action="shift">闪避</button>
+      <div class="touch hud" id="touchControls" aria-label="触屏操作">
+        <div id="joystick" aria-label="方向摇杆，拖动移动，松手停止">
+          <span class="joystick-cross" aria-hidden="true"></span>
+          <span id="joystickKnob" aria-hidden="true"></span>
+        </div>
+        <div class="touch-actions">
+          <button data-action="shift" aria-label="闪避，点击触发">闪避<small>点击</small></button>
+          <button data-action="e" aria-label="卸势，每次点击触发">卸势<small>点击</small></button>
+          <button data-action="1" aria-label="输出，按住持续攻击">输出<small>按住</small></button>
+        </div>
       </div>
+      <p class="rotate-hint">请将手机横过来，使用双手操作</p>
       <dialog id="pauseMenu" aria-labelledby="pauseTitle">
         <div class="menu-panel">
           <h2 id="pauseTitle">演练暂停</h2>

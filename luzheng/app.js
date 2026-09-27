@@ -1,3 +1,4 @@
+import { bindTouchControls } from "./touch-controls.js";
 import { Game, dist } from "./engine.js";
 import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js";
 const $ = (id) => document.getElementById(id),
@@ -21,11 +22,18 @@ let game = new Game(),
   started = false,
   paused = true,
   keys = new Set(),
-  touch = { dx: 0, dy: 0 },
   last = 0,
   acc = 0,
   uiTimer = 0,
   resultDismissed = false;
+const touch = bindTouchControls({
+  joystick: $("joystick"),
+  knob: $("joystickKnob"),
+  buttons: document.querySelectorAll("[data-action]"),
+  enabled: () => started && !paused && game.status === "running" && game.party[0].hp > 0,
+  action: (key) => game.input(key),
+});
+const mobileLayout = window.matchMedia("(any-pointer: coarse)");
 const history = [];
 function logText() {
   return [
@@ -93,14 +101,15 @@ function reset(practiceOverride) {
     option,
   );
   keys.clear();
-  touch = { dx: 0, dy: 0 };
+  touch.reset();
   paused = true;
   acc = 0;
   updateUI();
 }
 $("reset").onclick = reset;
 $("retry").onclick = () => {
-  reset();
+  const event = game.status === "wipe" ? game.retryEvent() : null;
+  reset(event);
   start();
 };
 $("dismiss").onclick = () => {
@@ -115,7 +124,7 @@ function start() {
   $("entryMenu").close();
   $("pauseMenu").close();
   keys.clear();
-  touch = { dx: 0, dy: 0 };
+  touch.reset();
   canvas.focus();
   updateUI();
 }
@@ -127,7 +136,7 @@ function togglePause() {
   }
   paused = true;
   keys.clear();
-  touch = { dx: 0, dy: 0 };
+  touch.reset();
   $("pauseMenu").showModal();
   $("resume").focus();
   updateUI();
@@ -151,6 +160,23 @@ $("pause").onclick = () => {
   if (!started) start();
   else togglePause();
 };
+function adjacentMechanic(direction) {
+  const currentAt = game.a?.at ?? game.jumpTarget?.at ?? game.t;
+  return direction > 0
+    ? TIMELINE.find((item) => item.at > currentAt)
+    : [...TIMELINE].reverse().find((item) => item.at < currentAt);
+}
+function switchMechanic(direction) {
+  if (!started || paused || game.status !== "running") return;
+  const event = adjacentMechanic(direction);
+  if (event && game.jumpTo(event)) {
+    $("chapter").value = event.id;
+    acc = 0;
+    start();
+  }
+}
+$("previousMechanic").onclick = () => switchMechanic(-1);
+$("nextMechanic").onclick = () => switchMechanic(1);
 window.addEventListener("keydown", (e) => {
   if (
     ["ArrowLeft", "ArrowRight"].includes(e.key) &&
@@ -158,16 +184,7 @@ window.addEventListener("keydown", (e) => {
   ) {
     e.preventDefault();
     if (e.repeat) return;
-    const currentAt = game.a?.at ?? game.jumpTarget?.at ?? game.t;
-    const event =
-      e.key === "ArrowRight"
-        ? TIMELINE.find((item) => item.at > currentAt)
-        : [...TIMELINE].reverse().find((item) => item.at < currentAt);
-    if (event && game.jumpTo(event)) {
-      $("chapter").value = event.id;
-      acc = 0;
-      start();
-    }
+    switchMechanic(e.key === "ArrowRight" ? 1 : -1);
     return;
   }
   if (e.key === "Escape") {
@@ -184,35 +201,26 @@ window.addEventListener("keydown", (e) => {
   }
   if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
   const k = e.key.toLowerCase();
-  if (["w", "a", "s", "d", "1", "e", "shift", " "].includes(k)) {
+  if (["w", "a", "s", "d", "q", "e", "shift", " "].includes(k)) {
     e.preventDefault();
     keys.add(k);
-    if (!paused && !e.repeat) game.input(k);
+    if (!paused && !e.repeat) game.input(k === "q" ? "1" : k);
   }
 });
 window.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
 window.addEventListener("blur", () => {
   keys.clear();
-  touch = { dx: 0, dy: 0 };
+  touch.reset();
   if (started && !paused && game.status === "running") togglePause();
   updateUI();
 });
-document.querySelectorAll("[data-move]").forEach((b) => {
-  b.onpointerdown = (e) => {
-    e.preventDefault();
-    b.setPointerCapture(e.pointerId);
-    const [dx, dy] = b.dataset.move.split(",").map(Number);
-    touch = { dx, dy };
-  };
-  b.onpointerup = b.onpointercancel = () => (touch = { dx: 0, dy: 0 });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    touch.reset();
+    keys.clear();
+    if (started && !paused && game.status === "running") togglePause();
+  }
 });
-document.querySelectorAll("[data-action]").forEach(
-  (b) =>
-    (b.onpointerdown = (e) => {
-      e.preventDefault();
-      if (!paused) game.input(b.dataset.action);
-    }),
-);
 canvas.onclick = (e) => {
   if (paused) return;
   const r = canvas.getBoundingClientRect(),
@@ -240,18 +248,23 @@ function ring(x, y, r, color, width = 1) {
 }
 const view = { x: 0, y: 0, scale: 1 };
 function resize() {
+  touch.reset();
+  keys.clear();
+  if (mobileLayout.matches && window.innerHeight > window.innerWidth && started && !paused)
+    togglePause();
   const { width, height } = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.round(width * dpr);
   canvas.height = Math.round(height * dpr);
   view.x = width / 2;
-  view.y = height / 2 + 25;
+  view.y = height / 2 + (mobileLayout.matches ? 16 : 25);
   view.scale = Math.max(
     0.1,
-    Math.min((width - 32) / 650, (height - 170) / 620),
+    Math.min((width - (mobileLayout.matches && width > height ? 340 : 32)) / 650, (height - (mobileLayout.matches ? 90 : 170)) / 620),
   );
 }
 window.addEventListener("resize", resize);
+mobileLayout.addEventListener("change", resize);
 resize();
 function render() {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -558,6 +571,9 @@ function render() {
 }
 function updateUI() {
   const dead = game.party[0].hp <= 0;
+  const controlsDisabled = !started || paused || dead || game.status !== "running";
+  $("touchControls").hidden = controlsDisabled;
+  if (controlsDisabled) touch.reset();
   document.querySelector(".stage").classList.toggle("player-dead", dead);
   $("deathNotice").hidden = !dead || game.status !== "running";
   $("reviveStatus").textContent =
@@ -576,13 +592,16 @@ function updateUI() {
   $("bossHp").value = (game.boss.hp / game.boss.max) * 100;
   if (!started && !$("entryMenu").open) $("entryMenu").showModal();
   $("pause").hidden = !started;
+  $("mechanicControls").hidden = !started;
+  $("previousMechanic").disabled = paused || game.status !== "running" || !adjacentMechanic(-1);
+  $("nextMechanic").disabled = paused || game.status !== "running" || !adjacentMechanic(1);
   document.querySelector(".notice").hidden = !started;
   $("team").disabled = started;
   $("pause").textContent = !started
     ? "开始游戏"
     : game.status !== "running"
       ? "重开 / 选队"
-      : "暂停 · Esc";
+      : mobileLayout.matches ? "暂停" : "暂停 · Esc";
   const upcoming = game.queue.find((e) => !e.started);
   $("skill").textContent = !started
     ? "准备入场"
@@ -590,6 +609,8 @@ function updateUI() {
   $("hint").textContent = !started
     ? "选择队伍，开始演练"
     : game.a?.hint || upcoming?.hint || "保持输出，观察下一机制";
+  if (mobileLayout.matches)
+    $("hint").textContent = $("hint").textContent.replace(/按 E/g, "点击卸势").replace(/连续 E/g, "连续点击卸势");
   $("alive").textContent = game.party.filter((p) => p.hp > 0).length + " / 10";
   $("party").innerHTML = [1, 2]
     .map(
@@ -627,6 +648,8 @@ function updateUI() {
       game.status
     ] || "";
   $("resultReason").textContent = game.endReason || "";
+  const retryEvent = game.status === "wipe" ? game.retryEvent() : null;
+  $("retry").textContent = retryEvent ? "重试当前机制 · " + retryEvent.name : "重新挑战";
   if (show && wasHidden) $("retry").focus();
 }
 function frame(now) {
@@ -638,8 +661,8 @@ function frame(now) {
       game.step(1 / 60, {
         dx: (keys.has("d") ? 1 : 0) - (keys.has("a") ? 1 : 0) + touch.dx,
         dy: (keys.has("s") ? 1 : 0) - (keys.has("w") ? 1 : 0) + touch.dy,
-        attack: keys.has("1"),
-        fastForward: keys.has(" "),
+        attack: keys.has("q") || touch.attack,
+        fastForward: keys.has(" ") || touch.fastForward,
       });
       acc -= 1 / 60;
     }
