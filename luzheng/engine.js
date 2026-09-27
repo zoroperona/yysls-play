@@ -1,4 +1,4 @@
-import { CONFIG } from "./config.js?v=3c583c496c96";
+import { CONFIG } from "./config.js?v=bc5b31e056cb";
 import {
   segmentDistance,
   hitsSword,
@@ -8,8 +8,8 @@ import {
   inCleaveOuter,
   swordImpact,
   blocksBeforeSword,
-} from "./geometry.js?v=3c583c496c96";
-import { TIMELINE } from "./timeline.js?v=3c583c496c96";
+} from "./geometry.js?v=bc5b31e056cb";
+import { TIMELINE } from "./timeline.js?v=bc5b31e056cb";
 export const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 export class Game {
   constructor(settings = {}, practice = null) {
@@ -35,8 +35,8 @@ export class Game {
       };
     });
     const names = [
-      ["醉星入梦", "醉星入梦", "棠尸", "倾白", "醉星入梦"],
-      ["醉星入梦", "衫上", "一夜飘零", "醉星入梦", "醉星入梦"],
+      ["招租位", "招租位", "棠尸", "倾白", "招租位"],
+      ["招租位", "衫上", "一夜飘零", "桓云宴", "招租位"],
     ];
     for (const team of [1, 2]) {
       const members = this.party.filter((p) => p.team === team);

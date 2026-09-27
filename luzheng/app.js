@@ -1,6 +1,6 @@
-import { bindTouchControls } from "./touch-controls.js?v=3c583c496c96";
-import { Game, dist } from "./engine.js?v=3c583c496c96";
-import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=3c583c496c96";
+import { bindTouchControls } from "./touch-controls.js?v=bc5b31e056cb";
+import { Game, dist } from "./engine.js?v=bc5b31e056cb";
+import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=bc5b31e056cb";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");
