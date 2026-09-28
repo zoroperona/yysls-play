@@ -1,0 +1,41 @@
+dialog.boss-pause-menu {
+  box-sizing: border-box;
+  width: min(520px, 92vw);
+  max-height: 88dvh;
+  padding: 0;
+  overflow-y: auto;
+  color: #eee5ce;
+  background: #171c20;
+  border: 1px solid #77664b;
+  border-radius: 12px;
+  text-align: left;
+}
+.boss-pause-menu .menu-panel { padding: 24px; }
+.boss-pause-menu h2 { margin: 0 0 12px; font-size: 28px; }
+.boss-pause-menu p { font-size: 13px; line-height: 1.6; color: #b7b09e; }
+.boss-pause-menu .menu-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.boss-pause-menu button {
+  width: auto;
+  margin: 0;
+  padding: 10px 14px;
+  min-height: 44px;
+  border: 1px solid #77664b;
+  border-radius: 4px;
+  background: #29342d;
+  color: #eee5ce;
+  font: inherit;
+}
+.boss-pause-menu button.primary { background: #647656; }
+.boss-pause-menu .bgm-volume { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin: 20px 0; }
+.boss-pause-menu input[type="range"] {
+  grid-column: 1 / -1;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  accent-color: #d6b977;
+  touch-action: pan-y;
+}
+.boss-pause-menu input:focus-visible { outline: 2px solid #d6b977; outline-offset: 3px; }
+.boss-pause-menu details { margin-top: 18px; }

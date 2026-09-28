@@ -1,12 +1,17 @@
-import { p2Hint, castState } from "./p2.js?v=76245c7662c7";
-import { Game, distance } from "./engine.js?v=76245c7662c7";
-import { TIMELINE } from "./timeline.js?v=76245c7662c7";
-import { render } from "./render.js?v=76245c7662c7";
-import { bindTouchControls } from "../shared/touch-controls.js?v=76245c7662c7";
-import { bindFullscreen } from "../shared/fullscreen.js?v=76245c7662c7";
+import { p2Hint, castState } from "./p2.js?v=ce2d7eddec36";
+import { Game, distance } from "./engine.js?v=ce2d7eddec36";
+import { TIMELINE } from "./timeline.js?v=ce2d7eddec36";
+import { render } from "./render.js?v=ce2d7eddec36";
+import { bindTouchControls } from "../shared/touch-controls.js?v=ce2d7eddec36";
+import { bindFullscreen } from "../shared/fullscreen.js?v=ce2d7eddec36";
+import { BossBgm } from "../shared/bgm.js?v=ce2d7eddec36";
+import { mountPauseMenu } from "../shared/pause-menu.js?v=ce2d7eddec36";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");
+const bgm = new BossBgm("青瓶居士");
+mountPauseMenu({ dialog: $("menu"), bgm });
+window.addEventListener("pagehide", () => bgm.pause());
 const mobile = matchMedia("(any-pointer: coarse)");
 let game = new Game(),
   accumulator = 0,
@@ -56,6 +61,7 @@ function clear() {
 function pause() {
   if (game.status === "running" && !dialogs.some((d) => d.open)) {
     game.pause();
+    bgm.pause();
     clear();
     $("menu").showModal();
   }
@@ -117,9 +123,7 @@ window.addEventListener("keydown", (event) => {
   if (key === "escape") {
     event.preventDefault();
     if ($("menu").open) {
-      $("menu").close();
-      clear();
-      game.start();
+      if (!$("logMenu").open) $("resume").click();
     } else pause();
     return;
   }
@@ -173,6 +177,7 @@ function fitPortraitArena() {
 }
 window.addEventListener("resize", resize);
 function reset(practiceIndex = null) {
+  bgm.reset();
   resetVictory();
   clear();
   dialogs.forEach((d) => d.close());
@@ -198,6 +203,7 @@ function renderParty() {
     }
 }
 $("start").onclick = () => {
+  bgm.resume();
   dialogs.forEach((dialog) => dialog.close());
   clear();
   game.start();
@@ -205,6 +211,7 @@ $("start").onclick = () => {
 $("pause").onclick = pause;
 $("shieldAction").onclick = () => action("g");
 $("resume").onclick = () => {
+  bgm.resume();
   $("menu").close();
   clear();
   game.start();
@@ -216,6 +223,8 @@ $("retry").onclick = () => {
   $("result").close();
   clear();
   game.jump(game.lastEvent, { retry: true });
+  bgm.reset();
+  bgm.resume();
   shown = false;
 };
 $("resultLog").onclick = () => $("showLog").click();
@@ -238,6 +247,7 @@ for (const dialog of dialogs)
   dialog.addEventListener("cancel", (event) => event.preventDefault());
 $("showLog").onclick = () => {
   game.pause();
+  bgm.pause();
   clear();
   $("fullLog").textContent =
     game.logs
@@ -559,6 +569,8 @@ function frame(now) {
       break;
     }
   }
+  if (game.status !== "running" && bgm.running) bgm.pause();
+  bgm.update();
   hud();
   render(ctx, game, view);
   requestAnimationFrame(frame);

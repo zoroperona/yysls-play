@@ -1,4 +1,4 @@
-import { createRoster } from "../shared/roster.js?v=76245c7662c7";
+import { createRoster } from "../shared/roster.js?v=ce2d7eddec36";
 import {
   resetP2,
   beginP2,
@@ -6,9 +6,9 @@ import {
   p2AITarget,
   p2Attack,
   placeFinalPractice,
-} from "./p2.js?v=76245c7662c7";
-import { CONFIG } from "./config.js?v=76245c7662c7";
-import { TIMELINE, P1_END } from "./timeline.js?v=76245c7662c7";
+} from "./p2.js?v=ce2d7eddec36";
+import { CONFIG } from "./config.js?v=ce2d7eddec36";
+import { TIMELINE, P1_END } from "./timeline.js?v=ce2d7eddec36";
 export const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 const unit = (x, y) => {
   const d = Math.hypot(x, y);

@@ -10,7 +10,8 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="../assets/luzheng/sprites/app-icon-192.png" />
     <title>陆狰 · 机制演练</title>
-    <link rel="stylesheet" href="style.css?v=76245c7662c7" />
+    <link rel="stylesheet" href="style.css?v=ce2d7eddec36" />
+    <link rel="stylesheet" href="../shared/pause-menu.css?v=ce2d7eddec36" />
   </head>
   <body>
     <!-- 全窗口战场，HUD 覆盖其上；玩家替换所选队伍指定位置。沿用现有素材与机制配色。 -->
@@ -83,18 +84,6 @@
         </div>
       </div>
       <dialog id="pauseMenu" aria-labelledby="pauseTitle">
-        <div class="menu-panel">
-          <h2 id="pauseTitle">演练暂停</h2>
-          <button id="pauseLog">战斗日志</button>
-          <button id="fullscreenToggle" hidden>进入全屏</button>
-          <p id="fullscreenStatus" role="status" hidden></p>
-          <p class="home-screen-help" hidden></p>
-          <p class="muted">战场已冻结 · Esc 返回</p>
-          <p class="contact-note">任何疑难杂症和缺陷请联系倾白丶老师</p>
-          <div class="menu-actions">
-            <button id="resume">继续游戏</button
-            ><button id="reset">重开 / 重新选队</button>
-          </div>
           <details>
             <summary>练习设置与战斗记录</summary>
             <label for="chapter">练习章节</label
@@ -109,7 +98,6 @@
             <p id="score"></p>
             <ol id="log"></ol>
           </details>
-        </div>
       </dialog>
       <div id="victoryBanner" role="status" aria-label="克敌制胜" hidden>
         <span id="victoryText">克敌制胜</span>
@@ -136,6 +124,6 @@
         </div>
       </dialog>
     </main>
-    <script type="module" src="app.js?v=76245c7662c7"></script>
+    <script type="module" src="app.js?v=ce2d7eddec36"></script>
   </body>
 </html>

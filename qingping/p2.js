@@ -1,5 +1,5 @@
 // P2 training parameters and decisions are documented in docs/qingping-p2-design.md.
-import { distance, inFireCone } from "./engine.js?v=76245c7662c7";
+import { distance, inFireCone } from "./engine.js?v=ce2d7eddec36";
 export const P2_TYPES = new Set([
   "green",
   "cleave",

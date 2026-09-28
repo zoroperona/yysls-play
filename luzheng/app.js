@@ -1,10 +1,15 @@
-import { bindFullscreen } from "./fullscreen.js?v=76245c7662c7";
-import { bindTouchControls } from "./touch-controls.js?v=76245c7662c7";
-import { Game, dist } from "./engine.js?v=76245c7662c7";
-import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=76245c7662c7";
+import { bindFullscreen } from "./fullscreen.js?v=ce2d7eddec36";
+import { bindTouchControls } from "./touch-controls.js?v=ce2d7eddec36";
+import { Game, dist } from "./engine.js?v=ce2d7eddec36";
+import { PRACTICE_OPTIONS, TIMELINE } from "./timeline.js?v=ce2d7eddec36";
+import { BossBgm } from "../shared/bgm.js?v=ce2d7eddec36";
+import { mountPauseMenu } from "../shared/pause-menu.js?v=ce2d7eddec36";
 const $ = (id) => document.getElementById(id),
   canvas = $("arena"),
   ctx = canvas.getContext("2d");
+const bgm = new BossBgm("陆狰");
+mountPauseMenu({ dialog: $("pauseMenu"), bgm, resetLabel: "重开 / 重新选队" });
+window.addEventListener("pagehide", () => bgm.pause());
 const fmt = (t) =>
   `${Math.floor(t / 60)
     .toString()
@@ -110,6 +115,7 @@ PRACTICE_OPTIONS.forEach((e) => {
 });
 let victoryFor = null, victoryFinished = false, victoryAnimation = null;
 function reset(practiceOverride) {
+  bgm.reset();
   victoryAnimation?.cancel();
   victoryFor = null;
   victoryFinished = false;
@@ -161,6 +167,7 @@ $("dismiss").onclick = () => {
 $("chapter").onchange = reset;
 $("team").onchange = reset;
 function start() {
+  bgm.resume();
   started = true;
   paused = false;
   $("entryMenu").close();
@@ -179,6 +186,7 @@ function togglePause() {
   paused = true;
   keys.clear();
   touch.reset();
+  bgm.pause();
   $("pauseMenu").showModal();
   $("resume").focus();
   updateUI();
@@ -188,10 +196,6 @@ $("start").onclick = () => {
   start();
 };
 $("entryMenu").addEventListener("cancel", (e) => e.preventDefault());
-$("pauseMenu").addEventListener("cancel", (e) => {
-  e.preventDefault();
-  start();
-});
 $("result").addEventListener("cancel", (e) => {
   e.preventDefault();
   $("dismiss").click();
@@ -756,6 +760,8 @@ function frame(now) {
       acc -= 1 / 60;
     }
   }
+  if (game.status !== "running" && bgm.running) bgm.pause();
+  bgm.update();
   render();
   uiTimer += dt;
   if (uiTimer > 0.1) {
