@@ -1,0 +1,10 @@
+node_modules/
+_site/
+_minigame/
+_miniprogram/
+.env*
+!.env.example
+*.key
+*.pem
+project.private.config.json
+.DS_Store

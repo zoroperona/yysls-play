@@ -10,6 +10,7 @@ export function mountPauseMenu({ dialog, bgm, resetLabel = "重新开始" }) {
       <div class="menu-actions">
         <button id="resume" class="primary">继续游戏</button>
         <button id="reset">${resetLabel}</button>
+        <button id="returnHome">返回主界面</button>
       </div>
       <label class="bgm-volume" for="bgmVolume">
         <span>背景音乐音量</span><output id="bgmVolumeValue" for="bgmVolume"></output>
@@ -21,7 +22,7 @@ export function mountPauseMenu({ dialog, bgm, resetLabel = "重新开始" }) {
       </div>
       <p id="fullscreenStatus" role="status" hidden></p>
       <p class="home-screen-help" hidden></p>
-      <p class="contact-note">任何疑难杂症和缺陷请联系倾白丶老师</p>
+      <p class="contact-note">问题反馈请使用仓库 Issues</p>
     </div>`;
   if (settings) dialog.querySelector(".menu-panel").append(settings);
   const slider = dialog.querySelector("#bgmVolume");
@@ -34,6 +35,7 @@ export function mountPauseMenu({ dialog, bgm, resetLabel = "重新开始" }) {
   });
   refresh();
   dialog.querySelector("#pauseLog").onclick = () => document.getElementById("showLog").click();
+  dialog.querySelector("#returnHome").onclick = () => { window.location.href = "../"; };
   dialog.addEventListener("cancel", (event) => {
     event.preventDefault();
     dialog.querySelector("#resume").click();

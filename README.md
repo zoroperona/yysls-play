@@ -1,0 +1,22 @@
+# Boss 演练通用模板
+
+这是用于新建机制演练的通用代码与制作规范，不包含具体 Boss 规则、时间轴、录像、头像或音乐。当前目录替代此前的演练成品；Git 历史未重写，旧提交仍可能包含历史内容。
+
+```sh
+npm test
+npm run check:public
+npm run build:pages
+npm run serve
+```
+
+需要 Node.js 20+；本仓库无 npm 依赖。打开 http://localhost:4173 查看模板入口和阵容示例。此示例仅验证模块接线，不是完整战斗游戏。
+
+1. 阅读 [开发流程](workflow.md) 与 [UI 规范](docs/ui/README.md)。
+2. 复制 [制作单](docs/templates/boss-production.md)、[证据时间轴](docs/templates/boss-timeline.md) 和 [Boss 目录](templates/boss/README.md)。
+3. 先确定 Markdown 规则，再实现机制；模板的空时间轴和未实现引擎会明确阻止战斗启动。
+4. 按 [模块参考](docs/shared-reference.md) 复用代码，记录自动检查、实际操作、设备和未测项。
+5. 按 [发布说明](docs/web-publishing.md) 检查脱敏与构建产物，再按平台发布。
+
+`shared/` 提供通用浏览器模块；`miniprogram/lib/` 仅提供可独立复用的微信音频和触控适配。与具体 Boss 强耦合的会话、渲染器和平台发布工程未复制，接入边界见 [微信参考](docs/wechat-publishing.md)。
+
+`main`、`xhs`、`vx` 保持通用模板一致；本仓库不含真实平台发布配置。新增平台配置只能在对应分支维护，密钥只通过本地环境提供。

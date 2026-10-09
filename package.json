@@ -1,0 +1,4 @@
+{
+  "name": "boss-practice-template", "version": "1.0.0", "private": true, "type": "module",
+  "scripts": {"test": "node --test tests/*.test.js", "build:pages": "node scripts/build-pages.js", "check:public": "node scripts/check-public.js", "serve": "npm run build:pages && python3 -m http.server 4173 --directory _site"}
+}

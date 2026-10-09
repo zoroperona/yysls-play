@@ -1,0 +1,14 @@
+.assets-loading .stage > :not(dialog) { visibility: hidden; }
+.boss-loading { margin: 16px 0; }
+.boss-loading p { font-size: 14px; line-height: 1.6; }
+.boss-loading progress { display: block; width: 100%; height: 6px; accent-color: #c9b578; }
+.boss-loading button { margin-top: 12px; }
+.boss-loading button[hidden] { display: none; }
+.assets-loading #start:disabled { cursor: wait; }
+.boss-audio-retry {
+  position: fixed; z-index: 100; top: max(12px, env(safe-area-inset-top));
+  left: 50%; transform: translateX(-50%); max-width: 90vw;
+  padding: 10px 16px; border: 1px solid #c9b578; border-radius: 8px;
+  background: #192521; color: #eee3c7; font: inherit;
+}
+.boss-audio-retry[hidden] { display: none; }
