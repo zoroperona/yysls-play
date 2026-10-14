@@ -1,5 +1,7 @@
 # 线上体验地址
 https://lh-play-yysls.pages.dev
+<img width="890" height="797" alt="image" src="https://github.com/user-attachments/assets/1adca1f6-20b1-4b36-a96e-a911a61b0ae0" />
+
 
 # Boss 演练通用模板
 
