@@ -30,3 +30,5 @@ npm run serve
 `shared/` 提供通用浏览器模块；`miniprogram/lib/` 仅提供可独立复用的微信音频和触控适配。与具体 Boss 强耦合的会话、渲染器和平台发布工程未复制，接入边界见 [微信参考](docs/wechat-publishing.md)。
 
 `main`、`xhs`、`vx` 保持通用模板一致；本仓库不含真实平台发布配置。新增平台配置只能在对应分支维护，密钥只通过本地环境提供。
+
+通用模块最新状态见 [整理与复核](docs/common-features-summary.md)、[模块参考](docs/shared-reference.md) 与 [开发流程](docs/boss-development-workflow.md)。
