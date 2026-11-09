@@ -1,6 +1,11 @@
 import { readdir, readFile } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
-const denied = /(?:陆狰|青瓶|茧中|愁铃|醉星入梦|倾白|棠尸|衫上|一夜飘零|桓云宴|luzheng|qingping|jianzhong|choulingke|w[x][a-f0-9]{16}|\/(?:Users|home)\/[^/\s]+|-----BEGIN [A-Z ]*PRIVATE KEY-----|lh-play-yysls)/i;
+const denied = /(?:陆狰|青瓶|茧中|愁铃|观澜使|醉星入梦|倾白|棠尸|衫上|一夜飘零|桓云宴|luzheng|qingping|jianzhong|choulingke|guanlanshi|w[x][a-f0-9]{16}|\/(?:Users|home)\/[^/\s]+|-----BEGIN [A-Z ]*PRIVATE KEY-----|lh-play-yysls)/i;
+// The maintained README intentionally links the public demo. Permit only this exact
+// standalone URL in README, never identifiers elsewhere or arbitrary URL prefixes.
+function publicText(name, text) {
+  return name === 'README.md' ? text.replace(/^https:\/\/lh-play-yysls\.pages\.dev\/?\r?$/gm, '') : text;
+}
 let failures = [];
 async function scan(dir, prefix = '') {
   for (const item of await readdir(dir, { withFileTypes: true })) {
@@ -9,7 +14,7 @@ async function scan(dir, prefix = '') {
     if (name === 'scripts/check-public.js') continue;
     const url = new URL(item.name + (item.isDirectory() ? '/' : ''), dir);
     if (item.isDirectory()) await scan(url, name + '/');
-    else if (/\.(key|pem|mp4|wav|m4a|png|jpg)$/i.test(name) || item.name.startsWith('.env') || denied.test(await readFile(url, 'utf8'))) failures.push(name);
+    else if (/\.(key|pem|mp4|wav|m4a|png|jpg)$/i.test(name) || item.name.startsWith('.env') || denied.test(publicText(name, await readFile(url, 'utf8')))) failures.push(name);
   }
 }
 await scan(root);
