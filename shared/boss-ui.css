@@ -820,145 +820,9 @@ details select {
     top: -25px;
   }
 }
-@media (any-pointer: coarse) and (orientation: portrait) {
-  /* Stack the boss and mechanic below the team/toolbar, using the shared layout. */
-  .boss-panel {
-    top: calc(max(10px, env(safe-area-inset-top)) + 200px);
-    width: 78vw;
-  }
-  .notice {
-    top: calc(max(10px, env(safe-area-inset-top)) + 262px);
-    width: calc(100% - 28px);
-  }
-  .layers {
-    left: max(16px, env(safe-area-inset-left));
-    width: calc(
-      100% - 196px - env(safe-area-inset-left) - env(safe-area-inset-right)
-    );
-    transform: none;
-    bottom: calc(max(20px, env(safe-area-inset-bottom)) + 24px);
-  }
-  #shieldNotice {
-    top: 55%;
-    max-width: calc(100% - 32px);
-  }
-}
 
-@media (any-pointer: coarse) and (orientation: portrait) {
-  .raid {
-    width: 148px;
-    padding: 4px;
-    font-size: 9px;
-  }
-  .raid .member {
-    min-height: 0;
-    padding: 1px 2px;
-    font-size: 9px;
-    line-height: 12px;
-  }
-  .raid .member progress {
-    height: 2px;
-    margin-top: 1px;
-  }
-  .raid #party {
-    gap: 2px 3px;
-  }
-  .raid .party-head {
-    margin-top: 2px;
-    line-height: 12px;
-  }
-  .raid #rescue {
-    margin-top: 2px;
-    line-height: 12px;
-  }
-  .boss-panel {
-    top: max(12px, env(safe-area-inset-top));
-    left: auto;
-    right: 12px;
-    transform: none;
-    width: calc(100% - 184px);
-  }
-  .boss-panel > div {
-    font-size: 12px;
-  }
-  #clock {
-    font-size: 9px;
-  }
-  .toolbar {
-    top: calc(max(12px, env(safe-area-inset-top)) + 78px);
-    width: calc(100% - 184px);
-    right: 12px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .toolbar button {
-    min-width: 0;
-    min-height: 30px;
-    padding: 3px;
-    font-size: 10px;
-  }
-  .toolbar .touch-only {
-    grid-column: auto;
-  }
-  .notice {
-    top: calc(max(12px, env(safe-area-inset-top)) + 144px);
-  }
-  .notice h2 {
-    margin: 2px 0;
-    font-size: 16px;
-  }
-  .notice p {
-    margin: 2px 0;
-  }
-  .touch-actions {
-    height: 64px;
-    width: 184px;
-    bottom: max(12px, env(safe-area-inset-bottom));
-  }
-  .touch-actions button[data-action="shift"] {
-    left: 0;
-    right: auto;
-    top: 4px;
-    width: 52px;
-    height: 52px;
-  }
-  .touch-actions button[data-action="e"] {
-    left: 59px;
-    top: 0;
-    width: 60px;
-    height: 60px;
-  }
-  .touch-actions button[data-action="1"] {
-    right: 0;
-    top: 4px;
-    width: 52px;
-    height: 52px;
-  }
-  .touch-actions #specialAction {
-    left: auto;
-    right: 0;
-    top: -62px;
-    width: 52px;
-    height: 52px;
-  }
-  .layers {
-    left: 12px;
-    width: calc(100% - 224px);
-    bottom: max(16px, env(safe-area-inset-bottom));
-  }
-  #layerText {
-    font-size: 13px;
-  }
-  #slots {
-    gap: 4px;
-  }
-  #slots i {
-    width: 19px;
-    height: 7px;
-  }
-  .layers small {
-    font-size: 9px;
-  }
-}
+
+
 
 /* Menu taps stay native and do not use combat pointer capture. */
 dialog button,
@@ -967,30 +831,24 @@ dialog a {
   touch-action: manipulation;
 }
 
-@media (any-pointer: coarse) and (orientation: portrait) {
-  .notice {
-    height: 124px;
-  }
-  .notice #cast {
-    position: absolute;
-    top: 82px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-  }
+
+
+
+
+.notice .important-notice { width:fit-content;max-width:100%;margin:8px auto;padding:7px 14px;color:#fff0b6;background:#574928ee;border:1px solid #d1ae5c;border-radius:4px;font-size:14px;font-weight:700;box-shadow:0 2px 8px #0008; }
+@media (max-width: 900px) {
+  .notice .important-notice { margin:4px auto;padding:5px 9px;font-size:12px; }
 }
 
-@media (any-pointer: coarse) and (orientation: portrait) {
-  .toolbar #previous {
-    grid-column: 1;
-    grid-row: 2;
-  }
-  .toolbar #next {
-    grid-column: 2;
-    grid-row: 2;
-  }
-  .toolbar .touch-only {
-    grid-column: 3;
-    grid-row: 2;
-  }
+/* Compact touch roster: keep all ten members without consuming half a short screen. */
+@media (any-pointer: coarse) and (orientation: landscape) {
+  .raid { padding:4px; font-size:9px; line-height:12px; }
+  .raid .party-head { margin-top:2px; font-size:9px; line-height:12px; }
+  .raid #party { margin-top:2px; gap:2px 3px; }
+  .raid .member { min-width:0; min-height:0; padding:1px 2px; font-size:9px; line-height:12px; }
+  .raid .member > span { min-width:0; }
+  .raid .member > span > span { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .raid .member small { font-size:8px; line-height:12px; }
+  .raid .member progress { height:2px; margin-top:1px; }
+  .raid #rescue { margin:2px 0 0; font-size:9px; line-height:12px; }
 }
