@@ -1,0 +1,174 @@
+/* Shared touch HUD: roster left, boss and controls right, mechanic below. */
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .notice { width:calc(100% - 28px); }
+  .layers {
+    left: max(16px, env(safe-area-inset-left));
+    width: calc(
+      100% - 196px - env(safe-area-inset-left) - env(safe-area-inset-right)
+    );
+    transform: none;
+    bottom: calc(max(20px, env(safe-area-inset-bottom)) + 24px);
+  }
+  #shieldNotice {
+    top: 55%;
+    max-width: calc(100% - 32px);
+  }
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .raid {
+    width: 148px;
+    padding: 4px;
+    font-size: 9px;
+  }
+  .raid .member {
+    min-height: 0;
+    padding: 1px 2px;
+    font-size: 9px;
+    line-height: 12px;
+  }
+  .raid .member progress {
+    height: 2px;
+    margin-top: 1px;
+  }
+  .raid #party {
+    gap: 2px 3px;
+  }
+  .raid .party-head {
+    margin-top: 2px;
+    line-height: 12px;
+  }
+  .raid #rescue {
+    margin-top: 2px;
+    line-height: 12px;
+  }
+  .boss-panel {
+    top: max(12px, env(safe-area-inset-top));
+    left: auto;
+    right: 12px;
+    transform: none;
+    width: calc(100% - 184px);
+  }
+  .boss-panel > div {
+    font-size: 12px;
+  }
+  #clock {
+    font-size: 9px;
+  }
+  .toolbar {
+    top: calc(max(12px, env(safe-area-inset-top)) + var(--battle-toolbar-offset, 78px));
+    width: calc(100% - 184px);
+    right: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .toolbar button {
+    min-width: 0;
+    min-height: 30px;
+    padding: 3px;
+    font-size: 10px;
+  }
+  .toolbar .touch-only {
+    grid-column: auto;
+  }
+  .notice {
+    top: calc(max(12px, env(safe-area-inset-top)) + var(--battle-notice-offset, 144px));
+  }
+  .notice h2 {
+    margin: 2px 0;
+    font-size: 16px;
+  }
+  .notice p {
+    margin: 2px 0;
+  }
+  .touch-actions:not(.extended-actions) {
+    height: 64px;
+    width: 184px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .touch-actions:not(.extended-actions) button[data-action="shift"] {
+    left: 0;
+    right: auto;
+    top: 4px;
+    width: 52px;
+    height: 52px;
+  }
+  .touch-actions:not(.extended-actions) button[data-action="e"] {
+    left: 59px;
+    top: 0;
+    width: 60px;
+    height: 60px;
+  }
+  .touch-actions:not(.extended-actions) button[data-action="1"] {
+    right: 0;
+    top: 4px;
+    width: 52px;
+    height: 52px;
+  }
+  .touch-actions:not(.extended-actions) #specialAction {
+    left: auto;
+    right: 0;
+    top: -62px;
+    width: 52px;
+    height: 52px;
+  }
+  .layers {
+    left: 12px;
+    width: calc(100% - 224px);
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  #layerText {
+    font-size: 13px;
+  }
+  #slots {
+    gap: 4px;
+  }
+  #slots i {
+    width: 19px;
+    height: 7px;
+  }
+  .layers small {
+    font-size: 9px;
+  }
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .notice {
+    height: 124px;
+  }
+  .notice #cast {
+    position: absolute;
+    top: 82px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+  }
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .toolbar #previous {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .toolbar #next {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .toolbar .touch-only {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}
+@media (any-pointer: coarse) {
+  .raid { top:max(10px, env(safe-area-inset-top)); bottom:auto; left:max(10px, env(safe-area-inset-left)); }
+  .raid .team-column { gap:2px; }
+  .raid .team-heading { font-size:9px; line-height:12px; margin:2px 0 0; }
+}
+@media (any-pointer: coarse) and (orientation: portrait) {
+  .boss-panel .boss-hp > span { font-size:12px; }
+  .raid { background:#101c19c9; border-top:1px solid #71816b; }
+  .raid-title { font-size:9px; margin-bottom:2px; }
+  .raid .member { background:#28403999; border:0; border-left:2px solid #7caabd; color:#e7e4d4; }
+  .raid .member.healer { border-left-color:#8bd191; background:#28403999; }
+  .raid .member.you { outline:0; border-left-color:#f1cd79; }
+  .raid .member b { font-size:8px; }
+  .toolbar #mechanicControls { gap:3px; }
+  .toolbar #mechanicControls button { font-size:10px; min-height:30px; padding:3px; }
+  .notice { left:50%; transform:translateX(-50%); }
+}
