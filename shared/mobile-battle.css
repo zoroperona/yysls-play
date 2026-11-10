@@ -131,11 +131,11 @@
 }
 @media (any-pointer: coarse) and (orientation: portrait) {
   .notice {
-    height: 124px;
+    height: var(--battle-notice-height, 96px);
   }
   .notice #cast {
     position: absolute;
-    top: 82px;
+    top: 54px;
     left: 50%;
     transform: translateX(-50%);
     margin: 0;
