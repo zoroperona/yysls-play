@@ -41,3 +41,7 @@
 | party-frame.js | 支持按队分列，状态/层数仍由调用方提供 |
 
 [可运行虚构接线示例](../examples/common-session.js) 只演示动作、节点与救援，不是完整游戏。通用边界、扩展与验证见 [本轮总结](common-features-summary.md)。
+
+## 网页手机共用布局
+
+页面在自己的样式后加载 `shared/mobile-battle.css`；使用 `.raid`、`.boss-panel`、`.toolbar`、`.notice` 这些共用区域。`portraitArena({width,height,noticeTop,diameterUnits})` 返回 x/y/scale，调用方映射到自己的视图字段。竖屏可开始/继续，转屏清输入；专属多动作网格加 `extended-actions` 避免被基础三键覆盖。需按实际浏览器可用高度验证，而非整块物理屏幕高度。
